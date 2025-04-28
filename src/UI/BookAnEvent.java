@@ -111,6 +111,7 @@ public class BookAnEvent extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         UserMainMenu userMainMenu = new UserMainMenu();
         userMainMenu.setVisible(true);
+        userMainMenu.setLocationRelativeTo(null);
         this.dispose(); // Close the current window
     }//GEN-LAST:event_jButton1ActionPerformed
 

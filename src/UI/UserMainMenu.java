@@ -123,6 +123,7 @@ public class UserMainMenu extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         BookAnEvent event = new BookAnEvent();
         event.setVisible(true);
+        event.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -130,6 +131,7 @@ public class UserMainMenu extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Login login = new Login();
         login.setVisible(true);
+        login.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -137,6 +139,7 @@ public class UserMainMenu extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         ViewMyBooking view = new ViewMyBooking();
         view.setVisible(true);
+        view.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -144,6 +147,7 @@ public class UserMainMenu extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
        CancelBooking cancelBooking = new CancelBooking();
        cancelBooking.setVisible(true);
+       cancelBooking.setLocationRelativeTo(null);
          this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -151,6 +155,7 @@ public class UserMainMenu extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         StatusOfMyBooking status = new StatusOfMyBooking();
         status.setVisible(true);
+        status.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 

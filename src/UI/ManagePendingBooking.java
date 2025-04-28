@@ -153,7 +153,7 @@ public class ManagePendingBooking extends javax.swing.JFrame {
         panel.add(textField);
 
         // Custom button options
-        Object[] options = {"Save", "Cancel"};
+        Object[] options = {"Submit", "Cancel"};
 
         // Wrap JOptionPane in a JDialog
         javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(

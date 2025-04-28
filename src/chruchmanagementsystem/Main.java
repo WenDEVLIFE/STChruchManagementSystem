@@ -23,6 +23,7 @@ public class Main {
         UIManager.setLookAndFeel(new FlatIntelliJLaf());
                 Login login = new Login();
         login.setVisible(true);
+        login.setLocationRelativeTo(null);
     } catch(Exception e){
         e.printStackTrace();
     }
