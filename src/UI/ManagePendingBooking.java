@@ -4,6 +4,8 @@
  */
 package UI;
 
+import javax.swing.*;
+
 /**
  *
  * @author Frouen Junior
@@ -126,8 +128,9 @@ public class ManagePendingBooking extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // This is for rejection
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        rejectionDialog();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -139,6 +142,47 @@ public class ManagePendingBooking extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    void rejectionDialog(){
+
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Reason for rejecting the booking:");
+        JTextField textField = new JTextField(20);
+        panel.add(label);
+
+        panel.add(textField);
+
+        // Custom button options
+        Object[] options = {"Save", "Cancel"};
+
+        // Wrap JOptionPane in a JDialog
+        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
+                panel,
+                javax.swing.JOptionPane.PLAIN_MESSAGE,
+                javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                null,
+                options,
+                options[0]
+        );
+        javax.swing.JDialog dialog = optionPane.createDialog(this, "Reject");
+        dialog.setVisible(true);
+
+        // Get the selected option
+        Object selectedValue = optionPane.getValue();
+
+        if (selectedValue == options[0]) {
+            // User clicked "Save"
+            String reason = textField.getText();
+            // Handle the reason for rejection here
+            System.out.println("Rejection reason: " + reason);
+            dialog.dispose();
+        } else {
+            // User clicked "Cancel" or closed the dialog
+            System.out.println("Rejection cancelled.");
+            dialog.dispose();
+        }
+
+    }
 
     /**
      * @param args the command line arguments
