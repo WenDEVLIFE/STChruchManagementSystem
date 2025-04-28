@@ -4,6 +4,8 @@
  */
 package UI;
 
+import javax.swing.*;
+
 /**
  *
  * @author Frouen Junior
@@ -101,8 +103,32 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // login function
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String username = jTextField1.getText();
+        String password = jPasswordField1.getText();
+
+        if (username.isEmpty() || password.isEmpty()){
+
+            JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        if(username.equals("User") && password.equals("1234")){
+            JOptionPane.showMessageDialog(this, "Login Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Open the main menu
+            UserMainMenu mainMenu = new UserMainMenu();
+            mainMenu.setVisible(true);
+            this.dispose();
+        }
+        if (username.equals("Admin") && password.equals("admin")){
+            JOptionPane.showMessageDialog(this, "Login Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
+            // Open the main menu
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed

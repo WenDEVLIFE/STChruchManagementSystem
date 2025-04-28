@@ -116,12 +116,12 @@ public class BookAnEvent extends javax.swing.JFrame {
 
      // This is for the Christening
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showFuneral();
+        showChristening();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     // This is for the funeral
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    showChristening();
+    showFuneral();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     // This is for the wedding
@@ -168,7 +168,7 @@ public class BookAnEvent extends javax.swing.JFrame {
                 options,
                 options[0]
         );
-        javax.swing.JDialog dialog = optionPane.createDialog(this, "Enter Funeral Details");
+        javax.swing.JDialog dialog = optionPane.createDialog(this, "Enter Christening Details");
         dialog.setVisible(true);
 
 // Handle user input
@@ -246,7 +246,7 @@ public class BookAnEvent extends javax.swing.JFrame {
                 options,
                 options[0]
         );
-        javax.swing.JDialog dialog = optionPane.createDialog(this, "Enter Funeral Details");
+        javax.swing.JDialog dialog = optionPane.createDialog(this, "Enter Wedding Details");
         dialog.setVisible(true);
 
 // Handle user input
