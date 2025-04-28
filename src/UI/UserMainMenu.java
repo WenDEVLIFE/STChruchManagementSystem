@@ -151,7 +151,9 @@ public class UserMainMenu extends javax.swing.JFrame {
 
     // This iss for status of my booking
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        StatusOfMyBooking status = new StatusOfMyBooking();
+        status.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
