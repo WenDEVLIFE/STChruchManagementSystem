@@ -125,7 +125,6 @@ public class AdminMainMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         ViewBookings event = new ViewBookings();
         event.setVisible(true);
         this.dispose();
@@ -149,14 +148,14 @@ public class AdminMainMenu extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    // This will manage the account
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        StatusOfMyBooking status = new StatusOfMyBooking();
+        ManageAccounts status = new ManageAccounts();
         status.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
         PrintReport report = new PrintReport();
         report.setVisible(true);
         this.dispose();
