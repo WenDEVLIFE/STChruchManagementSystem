@@ -124,6 +124,9 @@ public class Login extends javax.swing.JFrame {
         if (username.equals("Admin") && password.equals("admin")){
             JOptionPane.showMessageDialog(this, "Login Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
             // Open the main menu
+            AdminMainMenu adminmenu = new AdminMainMenu();
+            adminmenu.setVisible(true);
+            this.dispose();
         }
         else {
             JOptionPane.showMessageDialog(this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
