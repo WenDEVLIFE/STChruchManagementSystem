@@ -109,23 +109,258 @@ public class BookAnEvent extends javax.swing.JFrame {
 
     // This is for the go back to main menu
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        UserMainMenu userMainMenu = new UserMainMenu();
+        userMainMenu.setVisible(true);
+        this.dispose(); // Close the current window
     }//GEN-LAST:event_jButton1ActionPerformed
 
      // This is for the Christening
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        showFuneral();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     // This is for the funeral
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    showChristening();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     // This is for the wedding
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        showWedding();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    // This will show the Christening dialog
+    void showChristening(){
+        // Create a panel to hold input fields
+        javax.swing.JPanel panel = new javax.swing.JPanel();
+        panel.setLayout(new java.awt.GridLayout(0, 2, 5, 5)); // Grid layout for labels and fields
+
+// Add input fields
+        panel.add(new javax.swing.JLabel("Enter Child's Name:"));
+        javax.swing.JTextField nameField = new javax.swing.JTextField();
+        panel.add(nameField);
+
+        panel.add(new javax.swing.JLabel("Enter Parent's Name:"));
+        javax.swing.JTextField parentNameField = new javax.swing.JTextField();
+        panel.add(parentNameField);
+
+        panel.add(new javax.swing.JLabel("Enter Contact Number:"));
+        javax.swing.JTextField contactField = new javax.swing.JTextField();
+        panel.add(contactField);
+
+        panel.add(new javax.swing.JLabel("Enter Date (YYYY-MM-DD):"));
+        javax.swing.JTextField enterDateField = new javax.swing.JTextField();
+        panel.add(enterDateField);
+
+        panel.add(new javax.swing.JLabel("Enter Time Slot:"));
+        javax.swing.JTextField timeField = new javax.swing.JTextField();
+        panel.add(timeField);
+
+// Custom button options
+        Object[] options = {"Submit", "Cancel"};
+
+// Wrap JOptionPane in a JDialog
+        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
+                panel,
+                javax.swing.JOptionPane.PLAIN_MESSAGE,
+                javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                null,
+                options,
+                options[0]
+        );
+        javax.swing.JDialog dialog = optionPane.createDialog(this, "Enter Funeral Details");
+        dialog.setVisible(true);
+
+// Handle user input
+        Object selectedValue = optionPane.getValue();
+        if (selectedValue != null && selectedValue.equals("Submit")) { // "Submit" button clicked
+            String childName = nameField.getText();
+            String parentName = parentNameField.getText();
+            String contactNumber = contactField.getText();
+            String date = enterDateField.getText();
+            String timeSlot = timeField.getText();
+
+            // Check if any field is empty
+            if (childName.isEmpty() || parentName.isEmpty() || contactNumber.isEmpty() || date.isEmpty() || timeSlot.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            } else {
+                // Validate date format
+                try {
+                    java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                    dateFormat.setLenient(false); // Ensure strict parsing
+                    dateFormat.parse(date); // Try to parse the date
+                    // If parsing succeeds, proceed with further processing
+                    System.out.println("Child's Name: " + childName);
+                    System.out.println("Parent's Name: " + parentName);
+                    System.out.println("Contact Number: " + contactNumber);
+                    System.out.println("Date: " + date);
+                    System.out.println("Time Slot: " + timeSlot);
+                    dialog.dispose(); // Dispose of the dialog
+                } catch (java.text.ParseException e) {
+                    // Show error if date is invalid
+                    javax.swing.JOptionPane.showMessageDialog(this, "Invalid date format. Please use YYYY-MM-DD.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            System.out.println("User canceled the input.");
+            dialog.dispose(); // Dispose of the dialog
+        }
+    }
+
+    // This will show the wedding
+    void showWedding(){
+        // Create a panel to hold input fields
+        javax.swing.JPanel panel = new javax.swing.JPanel();
+        panel.setLayout(new java.awt.GridLayout(0, 2, 5, 5)); // Grid layout for labels and fields
+
+// Add input fields
+        panel.add(new javax.swing.JLabel("Enter Groom's Name:"));
+        javax.swing.JTextField groomField = new javax.swing.JTextField();
+        panel.add(groomField);
+
+        panel.add(new javax.swing.JLabel("Enter Bride's Name:"));
+        javax.swing.JTextField brideField = new javax.swing.JTextField();
+        panel.add(brideField);
+
+        panel.add(new javax.swing.JLabel("Enter Contact Number:"));
+        javax.swing.JTextField contactField = new javax.swing.JTextField();
+        panel.add(contactField);
+
+        panel.add(new javax.swing.JLabel("Enter Date (YYYY-MM-DD):"));
+        javax.swing.JTextField enterDateField = new javax.swing.JTextField();
+        panel.add(enterDateField);
+
+        panel.add(new javax.swing.JLabel("Enter Time Slot:"));
+        javax.swing.JTextField timeField = new javax.swing.JTextField();
+        panel.add(timeField);
+
+// Custom button options
+        Object[] options = {"Submit", "Cancel"};
+
+// Wrap JOptionPane in a JDialog
+        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
+                panel,
+                javax.swing.JOptionPane.PLAIN_MESSAGE,
+                javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                null,
+                options,
+                options[0]
+        );
+        javax.swing.JDialog dialog = optionPane.createDialog(this, "Enter Funeral Details");
+        dialog.setVisible(true);
+
+// Handle user input
+        Object selectedValue = optionPane.getValue();
+        if (selectedValue != null && selectedValue.equals("Submit")) { // "Submit" button clicked
+             String groomName = groomField.getText();
+              String brideName = brideField.getText();
+            String contactNumber = contactField.getText();
+            String date = enterDateField.getText();
+            String timeSlot = timeField.getText();
+
+            // Check if any field is empty
+            if (groomName.isEmpty() || brideName.isEmpty() || contactNumber.isEmpty() || date.isEmpty() || timeSlot.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            } else {
+                // Validate date format
+                try {
+                    java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                    dateFormat.setLenient(false); // Ensure strict parsing
+                    dateFormat.parse(date); // Try to parse the date
+                    // If parsing succeeds, proceed with further processing
+                    System.out.println("Child's Name: " + groomName);
+                    System.out.println("Parent's Name: " + brideName);
+                    System.out.println("Contact Number: " + contactNumber);
+                    System.out.println("Date: " + date);
+                    System.out.println("Time Slot: " + timeSlot);
+                    dialog.dispose(); // Dispose of the dialog
+                } catch (java.text.ParseException e) {
+                    // Show error if date is invalid
+                    javax.swing.JOptionPane.showMessageDialog(this, "Invalid date format. Please use YYYY-MM-DD.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            System.out.println("User canceled the input.");
+            dialog.dispose(); // Dispose of the dialog
+        }
+    }
+
+    void showFuneral(){
+        // Create a panel to hold input fields
+        javax.swing.JPanel panel = new javax.swing.JPanel();
+        panel.setLayout(new java.awt.GridLayout(0, 2, 5, 5)); // Grid layout for labels and fields
+
+// Add input fields
+        panel.add(new javax.swing.JLabel("Enter Deceased's Name:"));
+        javax.swing.JTextField desceasedField = new javax.swing.JTextField();
+        panel.add(desceasedField);
+
+        panel.add(new javax.swing.JLabel("Enter Family Representative's Name:"));
+        javax.swing.JTextField representativeField = new javax.swing.JTextField();
+        panel.add(representativeField);
+
+        panel.add(new javax.swing.JLabel("Enter Contact Number:"));
+        javax.swing.JTextField contactField = new javax.swing.JTextField();
+        panel.add(contactField);
+
+        panel.add(new javax.swing.JLabel("Enter Date (YYYY-MM-DD):"));
+        javax.swing.JTextField enterDateField = new javax.swing.JTextField();
+        panel.add(enterDateField);
+
+        panel.add(new javax.swing.JLabel("Enter Time Slot:"));
+        javax.swing.JTextField timeField = new javax.swing.JTextField();
+        panel.add(timeField);
+
+// Custom button options
+        Object[] options = {"Submit", "Cancel"};
+
+// Wrap JOptionPane in a JDialog
+        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
+                panel,
+                javax.swing.JOptionPane.PLAIN_MESSAGE,
+                javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                null,
+                options,
+                options[0]
+        );
+        javax.swing.JDialog dialog = optionPane.createDialog(this, "Enter Funeral Details");
+        dialog.setVisible(true);
+
+// Handle user input
+        Object selectedValue = optionPane.getValue();
+        if (selectedValue != null && selectedValue.equals("Submit")) { // "Submit" button clicked
+            String deceasedName = desceasedField.getText();
+            String familyRepName = representativeField.getText();
+            String contactNumber = contactField.getText();
+            String date = enterDateField.getText();
+            String timeSlot = timeField.getText();
+
+            // Check if any field is empty
+            if (deceasedName.isEmpty() || familyRepName.isEmpty() || contactNumber.isEmpty() || date.isEmpty() || timeSlot.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            } else {
+                // Validate date format
+                try {
+                    java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                    dateFormat.setLenient(false); // Ensure strict parsing
+                    dateFormat.parse(date); // Try to parse the date
+                    // If parsing succeeds, proceed with further processing
+                    System.out.println("Child's Name: " + deceasedName);
+                    System.out.println("Parent's Name: " + familyRepName);
+                    System.out.println("Contact Number: " + contactNumber);
+                    System.out.println("Date: " + date);
+                    System.out.println("Time Slot: " + timeSlot);
+                    dialog.dispose(); // Dispose of the dialog
+                } catch (java.text.ParseException e) {
+                    // Show error if date is invalid
+                    javax.swing.JOptionPane.showMessageDialog(this, "Invalid date format. Please use YYYY-MM-DD.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            System.out.println("User canceled the input.");
+            dialog.dispose(); // Dispose of the dialog
+        }
+    }
 
     /**
      * @param args the command line arguments
