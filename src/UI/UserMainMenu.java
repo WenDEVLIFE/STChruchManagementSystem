@@ -144,7 +144,9 @@ public class UserMainMenu extends javax.swing.JFrame {
 
     // This is canceling booking
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+       CancelBooking cancelBooking = new CancelBooking();
+       cancelBooking.setVisible(true);
+         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     // This iss for status of my booking
