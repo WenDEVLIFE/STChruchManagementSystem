@@ -4,6 +4,10 @@
  */
 package UI;
 
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import model.ReservationModel;
+
 /**
  *
  * @author Frouen Junior
@@ -11,6 +15,9 @@ package UI;
 public class ViewMyBooking extends javax.swing.JFrame {
 
     private static int userId;
+    
+    private DefaultTableModel bookingModel; 
+    List<ReservationModel> reservationList;
     /**
      * Creates new form ViewMyBooking
      */
@@ -39,7 +46,7 @@ public class ViewMyBooking extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Cancel Booking");
+        jButton1.setText("Delete Booking");
         jButton1.setActionCommand("");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

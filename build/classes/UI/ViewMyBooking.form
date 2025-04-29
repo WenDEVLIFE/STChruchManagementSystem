@@ -79,7 +79,7 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Cancel Booking"/>
+        <Property name="text" type="java.lang.String" value="Delete Booking"/>
         <Property name="actionCommand" type="java.lang.String" value=""/>
       </Properties>
       <Events>
