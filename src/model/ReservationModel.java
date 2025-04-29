@@ -15,6 +15,7 @@ public class ReservationModel {
     private String time;
     private String status;
     private String reason;
+    String name;
 
     public ReservationModel(String reservationID, String event, String date, String time, String status, String reason) {
         this.reservationID = reservationID;
@@ -76,6 +77,10 @@ public class ReservationModel {
     @Override
     public String toString() {
         return "ReservationModel{" + "reservationID=" + reservationID + ", event=" + event + ", date=" + date + ", time=" + time + ", status=" + status + ", reason=" + reason + '}';
+    }
+
+    public String getName() {
+        return name;
     }
 }
 

@@ -198,6 +198,53 @@ public class BookMYSQL {
         }
     }
 
+    public static String getName(int userId, String event) {
+        if (event.equals("Christening")) {
+            String query = "SELECT child_name FROM christening_table WHERE user_id = ?";
+            try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                    MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+                 java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, userId);
+                java.sql.ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    return resultSet.getString("child_name");
+                }
+            } catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+
+        } else if (event.equals("Funeral")) {
+            String query = "SELECT desceased_name FROM funeral_table WHERE user_id = ?";
+            try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                    MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+                 java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, userId);
+                java.sql.ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    return resultSet.getString("desceased_name");
+                }
+            } catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (event.equals("Wedding")) {
+            String query = "SELECT groom_name FROM wedding_table WHERE user_id = ?";
+            try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                    MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+                 java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setInt(1, userId);
+                java.sql.ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    return resultSet.getString("groom_name");
+                }
+            } catch (java.sql.SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        return null;
+    }
+
     public void insertChristening(Map<String, Object> christening, JDialog dialog) {
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM christening_table";
         String insertSQL = "INSERT INTO christening_table (reservation_id, child_name, parent_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";

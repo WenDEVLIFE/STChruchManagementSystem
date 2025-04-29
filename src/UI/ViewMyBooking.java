@@ -4,10 +4,13 @@
  */
 package UI;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import chruchmanagementsystem.PrintConfirmationPanel;
 import database.BookMYSQL;
 import model.ReservationModel;
 
@@ -201,8 +204,41 @@ public class ViewMyBooking extends javax.swing.JFrame {
 
     // This is for print
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow != -1) {
+            String reservationID = (String) jTable1.getValueAt(selectedRow, 0);
+            String event = (String) jTable1.getValueAt(selectedRow, 1);
+            String status = (String) jTable1.getValueAt(selectedRow, 4);
+            String date = (String) jTable1.getValueAt(selectedRow, 2);
+            String time = (String) jTable1.getValueAt(selectedRow, 3);
+
+            if (!"Accepted".equalsIgnoreCase(status)) {
+                JOptionPane.showMessageDialog(this, "Only approved reservations can be printed.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Fetch reservation details from the database
+             Map<String, Object> reservation = new HashMap<>();
+            String getName = BookMYSQL.getName(userId, event);
+            reservation.put("reservationID", reservationID);
+            reservation.put("event", event);
+            reservation.put("status", status);
+            reservation.put("date", date);
+            reservation.put("time", time);
+            reservation.put("name", getName);
+
+
+            if (reservation != null) {
+                // Display the print confirmation panel
+                SwingUtilities.invokeLater(() -> new PrintConfirmationPanel(reservation));
+            } else {
+                JOptionPane.showMessageDialog(this, "Reservation details not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a reservation to print.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed//GEN-LAST:event_jButton2ActionPerformed
 
     void loadBookings() {
         // This method should load the bookings from the database and populate the table
