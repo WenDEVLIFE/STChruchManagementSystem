@@ -6,6 +6,8 @@ package UI;
 
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+
+import database.BookMYSQL;
 import model.ReservationModel;
 
 /**
@@ -24,6 +26,11 @@ public class ViewMyBooking extends javax.swing.JFrame {
     public ViewMyBooking(int userId) {
         initComponents();
         ViewMyBooking.userId = userId;
+
+        String columnNames[] = {"Reservation ID", "Event", "Date", "Time", "Status"};
+        bookingModel = new DefaultTableModel(columnNames, 0);
+        jTable1.setModel(bookingModel);
+        loadBookings();
     }
 
     /**
@@ -169,6 +176,23 @@ public class ViewMyBooking extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    void loadBookings() {
+        // This method should load the bookings from the database and populate the table
+        // For now, we will just add some dummy data
+        bookingModel.setRowCount(0); // Clear existing rows
+        reservationList = BookMYSQL.getAllReservations(userId);
+
+        for (ReservationModel reservation : reservationList) {
+            String[] rowData = {
+                reservation.getReservationID(),
+                reservation.getEvent(),
+                reservation.getDate(),
+                reservation.getTime(),
+                reservation.getStatus()
+            };
+            bookingModel.addRow(rowData);
+        }
+    }
     /**
      * @param args the command line arguments
      */

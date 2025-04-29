@@ -1,9 +1,12 @@
 package database;
 
+import model.ReservationModel;
+
 import javax.swing.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 
@@ -19,6 +22,31 @@ public class BookMYSQL {
             }
         }
         return instance;
+    }
+
+    public static List<ReservationModel> getAllReservations(int userId) {
+        String query = "SELECT * FROM reservationtable WHERE user_id = ?";
+
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            java.sql.ResultSet resultSet = statement.executeQuery();
+            List<ReservationModel> reservations = new java.util.ArrayList<>();
+            while (resultSet.next()) {
+                String reservationID = resultSet.getString("reservation_id");
+                String event = resultSet.getString("event");
+                String date = resultSet.getString("date");
+                String time = resultSet.getString("time");
+                String status = resultSet.getString("status");
+                String reason = resultSet.getString("reason");
+                reservations.add(new ReservationModel(reservationID, event, date, time, status, reason));
+            }
+            return reservations;
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void insertChristening(Map<String, Object> christening, JDialog dialog) {
