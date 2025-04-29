@@ -25,15 +25,16 @@ public class BookMYSQL {
         return instance;
     }
 
+    // get the reservation by user id
     public static List<ReservationModel> getAllReservations(int userId) {
         String query = "SELECT * FROM reservationtable WHERE user_id = ?";
+        List<ReservationModel> reservations = new java.util.ArrayList<>();
 
         try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
                 MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
              java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
             java.sql.ResultSet resultSet = statement.executeQuery();
-            List<ReservationModel> reservations = new java.util.ArrayList<>();
             while (resultSet.next()) {
                 String reservationID = resultSet.getString("reservation_id");
                 String event = resultSet.getString("event");
@@ -48,6 +49,32 @@ public class BookMYSQL {
             e.printStackTrace();
             return null;
         }
+    }
+
+    // get all reservations
+    public static List<ReservationModel> getAllReservations1() {
+        String query = "SELECT * FROM reservationtable";
+        List<ReservationModel> reservations = new java.util.ArrayList<>();
+
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement = connection.prepareStatement(query);
+             java.sql.ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String reservationID = resultSet.getString("reservation_id");
+                String event = resultSet.getString("event");
+                String date = resultSet.getString("date");
+                String time = resultSet.getString("time");
+                String status = resultSet.getString("status");
+                String reason = resultSet.getString("reason");
+                reservations.add(new ReservationModel(reservationID, event, date, time, status, reason));
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("Error fetching reservations: " + e.getMessage());
+        }
+
+        return reservations;
     }
 
     public static String getRejectReason(String reservationId) {

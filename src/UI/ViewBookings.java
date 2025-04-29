@@ -4,17 +4,30 @@
  */
 package UI;
 
+import database.BookMYSQL;
+import model.ReservationModel;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+
 /**
  *
  * @author Frouen Junior
  */
 public class ViewBookings extends javax.swing.JFrame {
 
+    private DefaultTableModel bookingModel;
+    List<ReservationModel> reservationList;
     /**
      * Creates new form ViewBookings
      */
     public ViewBookings() {
         initComponents();
+        String columnNames[] = {"Reservation ID", "Event", "Date", "Time", "Status"};
+        bookingModel = new DefaultTableModel(columnNames, 0);
+        jTable1.setModel(bookingModel);
+        loadBookings();
     }
 
     /**
@@ -124,8 +137,39 @@ public class ViewBookings extends javax.swing.JFrame {
 
     // This will dete the books
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow != -1) {
+            int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this booking?", "Delete Booking", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                String reservationID = (String) jTable1.getValueAt(selectedRow, 0);
+                String event = (String) jTable1.getValueAt(selectedRow, 1);
+                BookMYSQL.deleteReservation(reservationID, event );
+                loadBookings();
+                javax.swing.JOptionPane.showMessageDialog(this, "Booking deleted successfully.", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a booking to delete.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    void loadBookings() {
+        // This method should load the bookings from the database and populate the table
+        // For now, we will just add some dummy data
+        bookingModel.setRowCount(0); // Clear existing rows
+        reservationList = BookMYSQL.getAllReservations1();
+
+        for (ReservationModel reservation : reservationList) {
+            String[] rowData = {
+                    reservation.getReservationID(),
+                    reservation.getEvent(),
+                    reservation.getDate(),
+                    reservation.getTime(),
+                    reservation.getStatus()
+            };
+            bookingModel.addRow(rowData);
+        }
+    }
 
     /**
      * @param args the command line arguments
