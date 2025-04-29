@@ -4,6 +4,10 @@
  */
 package UI;
 
+import database.BookMYSQL;
+
+import java.util.Map;
+
 /**
  *
  * @author Frouen Junior
@@ -198,7 +202,15 @@ public class BookAnEvent extends javax.swing.JFrame {
                     System.out.println("Contact Number: " + contactNumber);
                     System.out.println("Date: " + date);
                     System.out.println("Time Slot: " + timeSlot);
-                    dialog.dispose(); // Dispose of the dialog
+
+                    BookMYSQL.getInstance().insertChristening(Map.of(
+                            "childName", childName,
+                            "parentName", parentName,
+                            "contactNumber", contactNumber,
+                            "date", date,
+                            "timeSlot", timeSlot,
+                            "user_id", userId
+                    ), dialog);
                 } catch (java.text.ParseException e) {
                     // Show error if date is invalid
                     javax.swing.JOptionPane.showMessageDialog(this, "Invalid date format. Please use YYYY-MM-DD.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -276,7 +288,14 @@ public class BookAnEvent extends javax.swing.JFrame {
                     System.out.println("Contact Number: " + contactNumber);
                     System.out.println("Date: " + date);
                     System.out.println("Time Slot: " + timeSlot);
-                    dialog.dispose(); // Dispose of the dialog
+                    BookMYSQL.getInstance().insertWedding(Map.of(
+                            "groom_name", groomName,
+                            "brides_name", brideName,
+                            "contactNumber", contactNumber,
+                            "date", date,
+                            "timeSlot", timeSlot,
+                            "user_id", userId
+                    ), dialog);
                 } catch (java.text.ParseException e) {
                     // Show error if date is invalid
                     javax.swing.JOptionPane.showMessageDialog(this, "Invalid date format. Please use YYYY-MM-DD.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -353,7 +372,14 @@ public class BookAnEvent extends javax.swing.JFrame {
                     System.out.println("Contact Number: " + contactNumber);
                     System.out.println("Date: " + date);
                     System.out.println("Time Slot: " + timeSlot);
-                    dialog.dispose(); // Dispose of the dialog
+                    BookMYSQL.getInstance().insertFuneral(Map.of(
+                            "deceased_name", deceasedName,
+                            "family_rep_name", familyRepName,
+                            "contactNumber", contactNumber,
+                            "date", date,
+                            "timeSlot", timeSlot,
+                            "user_id", userId
+                    ), dialog);
                 } catch (java.text.ParseException e) {
                     // Show error if date is invalid
                     javax.swing.JOptionPane.showMessageDialog(this, "Invalid date format. Please use YYYY-MM-DD.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
