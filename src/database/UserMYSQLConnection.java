@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 
+import static database.MYSQLConnection.databaseUrl;
+import static database.MYSQLConnection.user;
+
 public class UserMYSQLConnection {
 
     private static volatile  UserMYSQLConnection instance;
@@ -27,7 +30,7 @@ public class UserMYSQLConnection {
         String sql = "SELECT * FROM users";
         List<UserModel> userList = new java.util.ArrayList<>();
 
-        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(databaseUrl, user, MYSQLConnection.password);
              java.sql.PreparedStatement preparedStatement = connection.prepareStatement(sql);
              java.sql.ResultSet resultSet = preparedStatement.executeQuery()) {
 
@@ -51,7 +54,7 @@ public class UserMYSQLConnection {
     // This will check if the username already exists
     public boolean checkUsernameExist(String username) {
         String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
-        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(databaseUrl, user, MYSQLConnection.password);
              java.sql.PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, username); // Set the username parameter
@@ -81,7 +84,7 @@ public class UserMYSQLConnection {
 
         String sql = "INSERT INTO users (username, password, contact_number, address, role, first_name, last_name, middle_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(databaseUrl, user, MYSQLConnection.password);
              java.sql.PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             // Set the values for the placeholders
@@ -107,7 +110,38 @@ public class UserMYSQLConnection {
     }
 
     // This will edit the user
-    public void EditUser(Map<String, Object> userdata){
+    public boolean updateAccount(int userId, String username, String password, String role) {
+        String sql = "UPDATE users SET username = ?, password = ?, role = ? WHERE user_id = ?";
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(databaseUrl, user, password);
+             java.sql.PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3, role);
+            preparedStatement.setInt(4, userId);
+
+            return preparedStatement.executeUpdate() > 0; // Return true if update was successful
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // This will delete the account
+    public void deleteAccount(int userId) {
+        String sql = "DELETE FROM users WHERE user_id = ?";
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(databaseUrl, user, MYSQLConnection.password);
+             java.sql.PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, userId);
+            int rowsDeleted = preparedStatement.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("User deleted successfully!");
+                JOptionPane.showMessageDialog(null, "Account deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error deleting account: " + e.getMessage());
+        }
     }
 }

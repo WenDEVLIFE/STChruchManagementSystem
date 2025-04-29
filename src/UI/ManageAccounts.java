@@ -285,32 +285,45 @@ public class ManageAccounts extends javax.swing.JFrame {
     }
 
 
-    void editAccount(){
+    // Edit account
+    void editAccount() {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a user to edit.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Retrieve selected user's data from the table
+        String currentUsername = (String) jTable1.getValueAt(selectedRow, 1);
+        String currentPassword = (String) jTable1.getValueAt(selectedRow, 2);
+        String currentRole = (String) jTable1.getValueAt(selectedRow, 3);
+
         // Create a panel to hold input fields
         javax.swing.JPanel panel = new javax.swing.JPanel();
         panel.setLayout(new java.awt.GridLayout(0, 2, 5, 5)); // Grid layout for labels and fields
 
-        // Add input fields
+        // Add input fields with pre-filled data
         panel.add(new javax.swing.JLabel("Username"));
-        javax.swing.JTextField usernameField = new javax.swing.JTextField();
+        javax.swing.JTextField usernameField = new javax.swing.JTextField(currentUsername);
         panel.add(usernameField);
 
         panel.add(new javax.swing.JLabel("Password"));
-        javax.swing.JPasswordField passwordField = new javax.swing.JPasswordField();
+        javax.swing.JPasswordField passwordField = new javax.swing.JPasswordField(currentPassword);
         panel.add(passwordField);
 
         panel.add(new javax.swing.JLabel("Confirm Password"));
-        javax.swing.JPasswordField confirmpasswordField = new javax.swing.JPasswordField();
+        javax.swing.JPasswordField confirmpasswordField = new javax.swing.JPasswordField(currentPassword);
         panel.add(confirmpasswordField);
 
         panel.add(new javax.swing.JLabel("Role"));
         javax.swing.JComboBox<String> roleComboBox = new javax.swing.JComboBox<>(new String[]{"Admin", "User"});
+        roleComboBox.setSelectedItem(currentRole);
         panel.add(roleComboBox);
 
-// Custom button options
+        // Custom button options
         Object[] options = {"Save", "Cancel"};
 
-// Wrap JOptionPane in a JDialog
+        // Wrap JOptionPane in a JDialog
         javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
                 panel,
                 javax.swing.JOptionPane.PLAIN_MESSAGE,
@@ -322,9 +335,9 @@ public class ManageAccounts extends javax.swing.JFrame {
         javax.swing.JDialog dialog = optionPane.createDialog(this, "Edit Account");
         dialog.setVisible(true);
 
-// Handle user input
+        // Handle user input
         Object selectedValue = optionPane.getValue();
-        if (selectedValue != null && selectedValue.equals("Submit")) { // "Submit" button clicked
+        if (selectedValue != null && selectedValue.equals("Save")) { // "Save" button clicked
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
             String confirmPassword = new String(confirmpasswordField.getPassword());
@@ -341,9 +354,25 @@ public class ManageAccounts extends javax.swing.JFrame {
                 return;
             }
 
-            //  TODO Here you can add code to save the account information to a database or file
+            // Update the user's data in the database
+            try {
+                boolean success = UserMYSQLConnection.getInstance().updateAccount(
+                        (int) jTable1.getValueAt(selectedRow, 0), // User ID
+                        username,
+                        password,
+                        role
+                );
 
-
+                if (success) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Account updated successfully!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    LoadData(); // Refresh the table
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Failed to update account.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                javax.swing.JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             System.out.println("User canceled the input.");
             dialog.dispose(); // Dispose of the dialog
@@ -352,6 +381,29 @@ public class ManageAccounts extends javax.swing.JFrame {
 
     void DeleteAccount(){
 
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a user to delete.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int userId = (int) jTable1.getValueAt(selectedRow, 0); // Assuming the first column is the user ID
+
+        int confirmation = javax.swing.JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this account?", "Confirm Deletion", javax.swing.JOptionPane.YES_NO_OPTION);
+        if (confirmation == javax.swing.JOptionPane.YES_OPTION) {
+            // Proceed with deletion
+            try {
+                UserMYSQLConnection.getInstance().deleteAccount(userId);
+                javax.swing.JOptionPane.showMessageDialog(this, "Account deleted successfully!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                LoadData(); // Refresh the table
+            } catch (Exception e) {
+                e.printStackTrace();
+                javax.swing.JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            System.out.println("User canceled the deletion.");
+        }
     }
 
     void LoadData(){
