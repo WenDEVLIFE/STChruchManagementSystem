@@ -3,6 +3,7 @@ package database;
 import model.ReservationModel;
 
 import javax.swing.*;
+import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -49,7 +50,26 @@ public class BookMYSQL {
         }
     }
 
-    public void insertChristening(Map<String, Object> christening, JDialog dialog) {
+    public static String getRejectReason(String reservationId) {
+        String query = "SELECT reason FROM reservationtable WHERE reservation_id = ?";
+
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, reservationId);
+            java.sql.ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("reason");
+            }
+            return null;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+        public void insertChristening(Map<String, Object> christening, JDialog dialog) {
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM christening_table";
         String insertSQL = "INSERT INTO christening_table (reservation_id, child_name, parent_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason) VALUES (?, ?, ?, ?, ?, ?)";

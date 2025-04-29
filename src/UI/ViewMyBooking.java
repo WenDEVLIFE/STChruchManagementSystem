@@ -163,7 +163,19 @@ public class ViewMyBooking extends javax.swing.JFrame {
 
     // This is for the view the reject reason
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow != -1) {
+            String status = (String) jTable1.getValueAt(selectedRow, 4);
+            if (status.equals("Rejected")) {
+                String reason = (String) jTable1.getValueAt(selectedRow, 5);
+                javax.swing.JOptionPane.showMessageDialog(this, "Reject Reason: " + reason, "Reject Reason", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "This booking is not rejected.", "Info", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a booking to view the reject reason.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     // This is for canceling booking
