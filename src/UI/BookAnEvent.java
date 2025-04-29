@@ -10,11 +10,13 @@ package UI;
  */
 public class BookAnEvent extends javax.swing.JFrame {
 
+    static int userId;
     /**
      * Creates new form BookAnEvent
      */
-    public BookAnEvent() {
+    public BookAnEvent(int userId) {
         initComponents();
+        BookAnEvent.userId = userId;
     }
 
     /**
@@ -109,7 +111,7 @@ public class BookAnEvent extends javax.swing.JFrame {
 
     // This is for the go back to main menu
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        UserMainMenu userMainMenu = new UserMainMenu();
+        UserMainMenu userMainMenu = new UserMainMenu(userId);
         userMainMenu.setVisible(true);
         userMainMenu.setLocationRelativeTo(null);
         this.dispose(); // Close the current window
@@ -393,7 +395,7 @@ public class BookAnEvent extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BookAnEvent().setVisible(true);
+                new BookAnEvent(userId).setVisible(true);
             }
         });
     }

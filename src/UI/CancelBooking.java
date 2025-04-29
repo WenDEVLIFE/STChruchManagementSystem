@@ -10,11 +10,13 @@ package UI;
  */
 public class CancelBooking extends javax.swing.JFrame {
 
+    private static int userId;
     /**
      * Creates new form CancelBooking
      */
-    public CancelBooking() {
+    public CancelBooking(int userId) {
         initComponents();
+        CancelBooking.userId = userId;
     }
 
     /**
@@ -117,7 +119,7 @@ public class CancelBooking extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        UserMainMenu userMainMenu = new UserMainMenu();
+        UserMainMenu userMainMenu = new UserMainMenu(userId);
         userMainMenu.setVisible(true);
         userMainMenu.setLocationRelativeTo(null);
         this.dispose(); // Close the current window
@@ -157,7 +159,7 @@ public class CancelBooking extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CancelBooking().setVisible(true);
+                new CancelBooking(userId).setVisible(true);
             }
         });
     }

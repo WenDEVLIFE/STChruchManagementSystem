@@ -16,11 +16,13 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class UserMainMenu extends javax.swing.JFrame {
 
+    static int userId;
     /**
      * Creates new form UserMainMenu
      */
-    public UserMainMenu() {
+    public UserMainMenu(int userId) {
         initComponents();
+        UserMainMenu.userId = userId;
     }
 
     /**
@@ -121,7 +123,7 @@ public class UserMainMenu extends javax.swing.JFrame {
 
     // This will navigate to book a event
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        BookAnEvent event = new BookAnEvent();
+        BookAnEvent event = new BookAnEvent(userId);
         event.setVisible(true);
         event.setLocationRelativeTo(null);
         this.dispose();
@@ -137,7 +139,7 @@ public class UserMainMenu extends javax.swing.JFrame {
 
     // This is for view the booking
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        ViewMyBooking view = new ViewMyBooking();
+        ViewMyBooking view = new ViewMyBooking(userId);
         view.setVisible(true);
         view.setLocationRelativeTo(null);
         this.dispose();
@@ -145,7 +147,7 @@ public class UserMainMenu extends javax.swing.JFrame {
 
     // This is canceling booking
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-       CancelBooking cancelBooking = new CancelBooking();
+       CancelBooking cancelBooking = new CancelBooking(userId);
        cancelBooking.setVisible(true);
        cancelBooking.setLocationRelativeTo(null);
          this.dispose();
@@ -153,7 +155,7 @@ public class UserMainMenu extends javax.swing.JFrame {
 
     // This iss for status of my booking
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        StatusOfMyBooking status = new StatusOfMyBooking();
+        StatusOfMyBooking status = new StatusOfMyBooking(userId);
         status.setVisible(true);
         status.setLocationRelativeTo(null);
         this.dispose();
@@ -193,7 +195,7 @@ public class UserMainMenu extends javax.swing.JFrame {
                 } catch (UnsupportedLookAndFeelException ex) {
                     Logger.getLogger(UserMainMenu.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                new UserMainMenu().setVisible(true);
+                new UserMainMenu(userId).setVisible(true);
             }
         });
     }

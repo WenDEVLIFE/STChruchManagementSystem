@@ -10,11 +10,13 @@ package UI;
  */
 public class ViewMyBooking extends javax.swing.JFrame {
 
+    private static int userId;
     /**
      * Creates new form ViewMyBooking
      */
-    public ViewMyBooking() {
+    public ViewMyBooking(int userId) {
         initComponents();
+        ViewMyBooking.userId = userId;
     }
 
     /**
@@ -139,7 +141,7 @@ public class ViewMyBooking extends javax.swing.JFrame {
 
     // This is for go back to main menu
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        UserMainMenu userMainMenu = new UserMainMenu();
+        UserMainMenu userMainMenu = new UserMainMenu(userId);
         userMainMenu.setVisible(true);
         userMainMenu.setLocationRelativeTo(null);
         this.dispose(); // Close the current window
@@ -190,7 +192,7 @@ public class ViewMyBooking extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ViewMyBooking().setVisible(true);
+                new ViewMyBooking(userId).setVisible(true);
             }
         });
     }

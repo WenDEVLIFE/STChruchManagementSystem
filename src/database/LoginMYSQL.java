@@ -42,7 +42,7 @@ public class LoginMYSQL {
                         login.dispose();
                     } else if ("User".equals(role)) {
                         // Open the user main menu
-                        UserMainMenu userMenu = new UserMainMenu();
+                        UserMainMenu userMenu = new UserMainMenu(userId);
                         userMenu.setVisible(true);
                         login.dispose();
                     }
