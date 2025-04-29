@@ -1,9 +1,9 @@
 package database;
 
 public class MYSQLConnection {
-    String databaseUrl = "jdbc:mysql://localhost:3306/chruch_managementdb";
-    String user ="root";
-    String password = "";
+    static String databaseUrl = "jdbc:mysql://localhost:3306/chruch_managementdb";
+    static String user ="root";
+    static String password = "";
 
 
     void intializeConnection() {

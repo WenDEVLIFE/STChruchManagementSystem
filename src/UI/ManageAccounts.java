@@ -4,6 +4,11 @@
  */
 package UI;
 
+import database.CreateAccount;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Frouen Junior
@@ -205,7 +210,7 @@ public class ManageAccounts extends javax.swing.JFrame {
         panel.add(roleComboBox);
 
     // Custom button options
-        Object[] options = {"Save", "Cancel"};
+        Object[] options = {"Submit", "Cancel"};
 
     // Wrap JOptionPane in a JDialog
         javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
@@ -244,8 +249,24 @@ public class ManageAccounts extends javax.swing.JFrame {
                 return;
             }
 
-             //  TODO Here you can add code to save the account information to a database or file
+            if(CreateAccount.getInstance().checkUsernameExist(username)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Username already exists.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
+             //  TODO Here you can add code to save the account information to a database or file
+            Map<String, Object> userdata = new HashMap<>();
+            userdata.put("username", username);
+            userdata.put("password", password);
+            userdata.put("role", role);
+            userdata.put("firstname", firstName);
+            userdata.put("lastname", lastName);
+            userdata.put("middlename", middleName);
+            userdata.put("contactnumber", contactNumber);
+            userdata.put("address", address);
+
+            CreateAccount.getInstance().createAcccount(userdata);
+            dialog.dispose(); // Dispose of the dialog
         } else {
             System.out.println("User canceled the input.");
             dialog.dispose(); // Dispose of the dialog
@@ -310,6 +331,7 @@ public class ManageAccounts extends javax.swing.JFrame {
             }
 
             //  TODO Here you can add code to save the account information to a database or file
+
 
         } else {
             System.out.println("User canceled the input.");
