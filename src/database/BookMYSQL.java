@@ -69,7 +69,44 @@ public class BookMYSQL {
 
     }
 
-        public void insertChristening(Map<String, Object> christening, JDialog dialog) {
+    // This will delete the reservation
+    public static void deleteReservation(String reservationID, String event) {
+        String query1 = "DELETE FROM reservationtable WHERE reservation_id = ?";
+        String query2 = null;
+
+        if ("Christening".equals(event)) {
+            query2 = "DELETE FROM christening_table WHERE reservation_id = ?";
+        } else if ("Funeral".equals(event)) {
+            query2 = "DELETE FROM funeral_table WHERE reservation_id = ?";
+        } else if ("Wedding".equals(event)) {
+            query2 = "DELETE FROM wedding_table WHERE reservation_id = ?";
+        }
+
+        if (query2 == null) {
+            throw new IllegalArgumentException("Invalid event type: " + event);
+        }
+
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement1 = connection.prepareStatement(query1);
+             java.sql.PreparedStatement statement2 = connection.prepareStatement(query2)) {
+
+            // Execute the first query
+            statement1.setString(1, reservationID);
+            statement1.executeUpdate();
+
+            // Execute the second query
+            statement2.setString(1, reservationID);
+            statement2.executeUpdate();
+
+            System.out.println("Reservation with ID " + reservationID + " deleted successfully.");
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while deleting the reservation: " + e.getMessage());
+        }
+    }
+
+    public void insertChristening(Map<String, Object> christening, JDialog dialog) {
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM christening_table";
         String insertSQL = "INSERT INTO christening_table (reservation_id, child_name, parent_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason) VALUES (?, ?, ?, ?, ?, ?)";

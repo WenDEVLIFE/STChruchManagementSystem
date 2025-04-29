@@ -5,6 +5,7 @@
 package UI;
 
 import java.util.List;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import database.BookMYSQL;
@@ -178,9 +179,24 @@ public class ViewMyBooking extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    // This is for canceling booking
+    // This is for delete booking
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow != -1) {
+            JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this booking?", "Delete Booking", JOptionPane.YES_NO_OPTION);
+            int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this booking?", "Delete Booking", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                String reservationID = (String) jTable1.getValueAt(selectedRow, 0);
+                String event = (String) jTable1.getValueAt(selectedRow, 1);
+                BookMYSQL.deleteReservation(reservationID, event );
+                loadBookings();
+                javax.swing.JOptionPane.showMessageDialog(this, "Booking deleted successfully.", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a booking to delete.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // This is for print
