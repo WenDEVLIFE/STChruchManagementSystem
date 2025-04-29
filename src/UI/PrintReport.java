@@ -4,6 +4,12 @@
  */
 package UI;
 
+import database.BookMYSQL;
+import javax.swing.*;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author Frouen Junior
@@ -123,17 +129,136 @@ public class PrintReport extends javax.swing.JFrame {
         this.dispose(); // Close the current window
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    // This is for the custom date
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String date = JOptionPane.showInputDialog(this, "Enter the date (YYYY-MM-DD):", "Custom Date Report", JOptionPane.QUESTION_MESSAGE);
+
+        if (date != null && !date.trim().isEmpty()) {
+            try {
+                // Fetch reservations for the given date
+                List<Map<String, Object>> reservations = BookMYSQL.getReservationsByDate(date);
+
+                if (reservations.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "No reservations found for the given date.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
+                // Generate the PDF report
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save Report as PDF");
+                int userSelection = fileChooser.showSaveDialog(this);
+
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    File fileToSave = fileChooser.getSelectedFile();
+                    if (!fileToSave.getName().endsWith(".pdf")) {
+                        fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
+                    }
+
+                    generatePDFReport(reservations, date, fileToSave);
+                    JOptionPane.showMessageDialog(this, "Report saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error generating report: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Date input is required.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    // This is for the daily reports
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        String date = JOptionPane.showInputDialog(this, "Enter the date (YYYY-MM-DD):", "Daily Report", JOptionPane.QUESTION_MESSAGE);
+
+        if (date != null && !date.trim().isEmpty()) {
+            try {
+                // Fetch reservations for the given date
+                List<Map<String, Object>> reservations = BookMYSQL.getReservationsByDate(date);
+
+                if (reservations.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "No reservations found for the given date.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
+                // Generate the PDF report
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save Daily Report as PDF");
+                int userSelection = fileChooser.showSaveDialog(this);
+
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    File fileToSave = fileChooser.getSelectedFile();
+                    if (!fileToSave.getName().endsWith(".pdf")) {
+                        fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
+                    }
+
+                    generatePDFReport(reservations, "Daily Report for " + date, fileToSave);
+                    JOptionPane.showMessageDialog(this, "Daily report saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error generating daily report: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Date input is required.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    // This is for the weekly reports
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        String startDate = JOptionPane.showInputDialog(this, "Enter the start date (YYYY-MM-DD):", "Weekly Report", JOptionPane.QUESTION_MESSAGE);
+
+        if (startDate != null && !startDate.trim().isEmpty()) {
+            try {
+                // Fetch reservations for the given week
+                List<Map<String, Object>> reservations = BookMYSQL.getReservationsByWeek(startDate);
+
+                if (reservations.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "No reservations found for the given week.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
+                // Generate the PDF report
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save Weekly Report as PDF");
+                int userSelection = fileChooser.showSaveDialog(this);
+
+                if (userSelection == JFileChooser.APPROVE_OPTION) {
+                    File fileToSave = fileChooser.getSelectedFile();
+                    if (!fileToSave.getName().endsWith(".pdf")) {
+                        fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
+                    }
+
+                    generatePDFReport(reservations, "Weekly Report starting " + startDate, fileToSave);
+                    JOptionPane.showMessageDialog(this, "Weekly report saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error generating weekly report: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Start date input is required.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void generatePDFReport(List<Map<String, Object>> reservations, String date, File file) throws Exception {
+        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+        com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(file));
+        document.open();
+
+        // Add title
+        document.add(new com.itextpdf.text.Paragraph(date, com.itextpdf.text.FontFactory.getFont(com.itextpdf.text.FontFactory.HELVETICA_BOLD, 16)));
+        document.add(new com.itextpdf.text.Paragraph("--------------------------------------------------"));
+
+        // Add reservation details
+        for (Map<String, Object> reservation : reservations) {
+            document.add(new com.itextpdf.text.Paragraph("Reservation ID: " + reservation.get("reservationID")));
+            document.add(new com.itextpdf.text.Paragraph("Event: " + reservation.get("event")));
+            document.add(new com.itextpdf.text.Paragraph("Name: " + reservation.get("name")));
+            document.add(new com.itextpdf.text.Paragraph("Time: " + reservation.get("time")));
+            document.add(new com.itextpdf.text.Paragraph("Status: " + reservation.get("status")));
+            document.add(new com.itextpdf.text.Paragraph("--------------------------------------------------"));
+        }
+
+        document.close();
+    }
 
     /**
      * @param args the command line arguments

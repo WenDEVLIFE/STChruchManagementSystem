@@ -3,10 +3,12 @@ package database;
 import model.ReservationModel;
 
 import javax.swing.*;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -243,6 +245,36 @@ public class BookMYSQL {
         }
 
         return null;
+    }
+
+    public static List<Map<String, Object>> getReservationsByWeek(String startDate) {
+         String query = "SELECT * FROM reservationtable WHERE date >= ? AND date < DATE_ADD(?, INTERVAL 7 DAY)";
+
+        List<Map<String, Object>> reservations = new ArrayList<>();
+
+         try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, startDate);
+            statement.setString(2, startDate);
+            java.sql.ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Map<String, Object> reservation = new HashMap<>();
+                reservation.put("reservationID", resultSet.getString("reservation_id"));
+                reservation.put("event", resultSet.getString("event"));
+                reservation.put("time", resultSet.getString("time"));
+                reservation.put("status", resultSet.getString("status"));
+                reservations.add(reservation);
+            }
+
+
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error fetching reservations: " + e.getMessage());
+         }
+
+        return reservations;
     }
 
     public void insertChristening(Map<String, Object> christening, JDialog dialog) {
@@ -511,5 +543,27 @@ public class BookMYSQL {
         }
 
         return result.toString();
+    }
+
+    public static List<Map<String, Object>> getReservationsByDate(String date) {
+        List<Map<String, Object>> reservations = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM reservationtable WHERE date = ?")) {
+            stmt.setString(1, date);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Map<String, Object> reservation = new HashMap<>();
+                reservation.put("reservationID", rs.getString("reservationID"));
+                reservation.put("event", rs.getString("event"));
+                reservation.put("name", rs.getString("name"));
+                reservation.put("time", rs.getString("time"));
+                reservation.put("status", rs.getString("status"));
+                reservations.add(reservation);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reservations;
     }
 }
