@@ -4,6 +4,8 @@
  */
 package UI;
 
+import database.LoginMYSQL;
+
 import javax.swing.*;
 
 /**
@@ -114,22 +116,8 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please fill in all fields", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        if(username.equals("User") && password.equals("1234")){
-            JOptionPane.showMessageDialog(this, "Login Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
-            // Open the main menu
-            UserMainMenu mainMenu = new UserMainMenu();
-            mainMenu.setVisible(true);
-            this.dispose();
-        }
-        if (username.equals("Admin") && password.equals("admin")){
-            JOptionPane.showMessageDialog(this, "Login Successful", "Success", JOptionPane.INFORMATION_MESSAGE);
-            // Open the main menu
-            AdminMainMenu adminmenu = new AdminMainMenu();
-            adminmenu.setVisible(true);
-            this.dispose();
-        }
         else {
-            JOptionPane.showMessageDialog(this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+            LoginMYSQL.getInstance().LoginUser(username, password, this);
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed

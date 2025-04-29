@@ -112,7 +112,7 @@ public class UserMYSQLConnection {
     // This will edit the user
     public boolean updateAccount(int userId, String username, String password, String role) {
         String sql = "UPDATE users SET username = ?, password = ?, role = ? WHERE user_id = ?";
-        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(databaseUrl, user, password);
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(databaseUrl, user, MYSQLConnection.password);
              java.sql.PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, username);
