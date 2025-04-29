@@ -4,6 +4,8 @@
  */
 package UI;
 
+import database.BookMYSQL;
+
 /**
  *
  * @author Frouen Junior
@@ -140,8 +142,23 @@ public class StatusOfMyBooking extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    // This is for the search function
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+
+        String searchText = jTextField1.getText();
+
+         if (searchText.isEmpty()) {
+             jTextArea1.setText("Please enter a search term.");
+
+         } else{
+             String result = BookMYSQL.getInstance().getReservationByUserId(userId, searchText);
+             if (result.isEmpty()) {
+                 jTextArea1.setText("No reservations found for the given search term.");
+             } else {
+                 jTextArea1.setText(result);
+             }
+         }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

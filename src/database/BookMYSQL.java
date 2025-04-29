@@ -331,4 +331,46 @@ public class BookMYSQL {
             System.out.println("An error occurred while inserting christening data: " + e.getMessage());
         }
     }
+
+    public String getReservationByUserId(int userId, String searchText) {
+        String query = "SELECT * FROM reservationtable WHERE user_id = ? AND " +
+                "(reservation_id LIKE ? OR event LIKE ? OR date LIKE ?)";
+        StringBuilder result = new StringBuilder();
+
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setInt(1, userId);
+            statement.setString(2, "%" + searchText + "%");
+            statement.setString(3, "%" + searchText + "%");
+            statement.setString(4, "%" + searchText + "%");
+
+            try (java.sql.ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    String status = resultSet.getString("status");
+
+                     if ("Rejected".equals(status)) {
+                        result.append("Reservation ID: ").append(resultSet.getString("reservation_id")).append("\n")
+                                .append("Event: ").append(resultSet.getString("event")).append("\n")
+                                .append("Date: ").append(resultSet.getString("date")).append("\n")
+                                .append("Time: ").append(resultSet.getString("time")).append("\n")
+                                .append("Status: ").append(status).append("\n")
+                                .append("Reason: ").append(resultSet.getString("reason")).append("\n\n");
+                    }
+
+                    result.append("Reservation ID: ").append(resultSet.getString("reservation_id")).append("\n")
+                            .append("Event: ").append(resultSet.getString("event")).append("\n")
+                            .append("Date: ").append(resultSet.getString("date")).append("\n")
+                            .append("Time: ").append(resultSet.getString("time")).append("\n")
+                            .append("Status: ").append(status).append("\n");
+                }
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            return "An error occurred while fetching reservations: " + e.getMessage();
+        }
+
+        return result.toString();
+    }
 }
