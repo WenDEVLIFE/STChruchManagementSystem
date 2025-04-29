@@ -185,7 +185,6 @@ public class ViewMyBooking extends javax.swing.JFrame {
         int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow != -1) {
-            JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this booking?", "Delete Booking", JOptionPane.YES_NO_OPTION);
             int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this booking?", "Delete Booking", JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
                 String reservationID = (String) jTable1.getValueAt(selectedRow, 0);
