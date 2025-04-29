@@ -168,9 +168,10 @@ public class ViewMyBooking extends javax.swing.JFrame {
 
         if (selectedRow != -1) {
             String status = (String) jTable1.getValueAt(selectedRow, 4);
+            String reservationID = (String) jTable1.getValueAt(selectedRow, 0);
             if (status.equals("Rejected")) {
                 String reason = (String) jTable1.getValueAt(selectedRow, 5);
-                javax.swing.JOptionPane.showMessageDialog(this, "Reject Reason: " + reason, "Reject Reason", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this, "Your reservation " + reservationID + " was rejected\n" + "\n Reason from Admin \n" + reason + "\n For more assistance, you may call the chruch office\n Contact: 0912-345-6789", "Reject Reason", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "This booking is not rejected.", "Info", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }

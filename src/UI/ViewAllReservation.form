@@ -163,7 +163,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Verdana" size="8" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="SEARCH YOUr RESERVATION ID, EVENT OR DATE"/>
+        <Property name="text" type="java.lang.String" value="SEARCH RESERVATION ID, EVENT OR DATE"/>
       </Properties>
     </Component>
   </SubComponents>

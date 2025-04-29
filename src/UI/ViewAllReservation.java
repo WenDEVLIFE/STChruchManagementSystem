@@ -99,7 +99,7 @@ public class ViewAllReservation extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Verdana", 1, 8)); // NOI18N
-        jLabel4.setText("SEARCH YOUr RESERVATION ID, EVENT OR DATE");
+        jLabel4.setText("SEARCH RESERVATION ID, EVENT OR DATE");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
