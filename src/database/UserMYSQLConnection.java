@@ -1,23 +1,54 @@
 package database;
 
+import model.UserModel;
+
 import javax.swing.*;
+import java.util.List;
 import java.util.Map;
 
-public class CreateAccount {
+public class UserMYSQLConnection {
 
-    private static volatile  CreateAccount instance;
+    private static volatile  UserMYSQLConnection instance;
 
-    public static CreateAccount getInstance() {
+    public static UserMYSQLConnection getInstance() {
         if (instance == null) {
-            synchronized (CreateAccount.class) {
+            synchronized (UserMYSQLConnection.class) {
                 if (instance == null) {
-                    instance = new CreateAccount();
+                    instance = new UserMYSQLConnection();
                 }
             }
         }
         return instance;
     }
 
+    // This will get the user
+    public List<UserModel> getUser(){
+
+        String sql = "SELECT * FROM users";
+        List<UserModel> userList = new java.util.ArrayList<>();
+
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             java.sql.ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("user_id");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String role = resultSet.getString("role");
+
+                UserModel user = new UserModel(id, username, password, role);
+                userList.add(user);
+            }
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error retrieving data: " + e.getMessage());
+        }
+        return userList;
+
+    }
+
+    // This will check if the username already exists
     public boolean checkUsernameExist(String username) {
         String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
         try (java.sql.Connection connection = java.sql.DriverManager.getConnection(MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
@@ -37,6 +68,7 @@ public class CreateAccount {
         return false; // Return false if an exception occurs
     }
 
+    // This will create the account
     public void createAcccount(Map<String, Object> userdata) {
         String username = (String) userdata.get("username");
         String password = (String) userdata.get("password");
@@ -72,5 +104,10 @@ public class CreateAccount {
             e.printStackTrace();
             System.out.println("Error inserting data: " + e.getMessage());
         }
+    }
+
+    // This will edit the user
+    public void EditUser(Map<String, Object> userdata){
+
     }
 }

@@ -4,9 +4,12 @@
  */
 package UI;
 
-import database.CreateAccount;
+import database.UserMYSQLConnection;
+import model.UserModel;
 
+import javax.swing.table.DefaultTableModel;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,11 +18,18 @@ import java.util.Map;
  */
 public class ManageAccounts extends javax.swing.JFrame {
 
+    DefaultTableModel userTableModel;
+    List<UserModel> userList;
     /**
      * Creates new form ManageAccounts
      */
     public ManageAccounts() {
         initComponents();
+
+        String [] columnNames = {"ID", "Username", "Password", "Role"};
+        userTableModel = new DefaultTableModel(columnNames, 0);
+        jTable1.setModel(userTableModel);
+        LoadData();
     }
 
     /**
@@ -249,7 +259,7 @@ public class ManageAccounts extends javax.swing.JFrame {
                 return;
             }
 
-            if(CreateAccount.getInstance().checkUsernameExist(username)) {
+            if(UserMYSQLConnection.getInstance().checkUsernameExist(username)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Username already exists.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -265,8 +275,9 @@ public class ManageAccounts extends javax.swing.JFrame {
             userdata.put("contactnumber", contactNumber);
             userdata.put("address", address);
 
-            CreateAccount.getInstance().createAcccount(userdata);
+            UserMYSQLConnection.getInstance().createAcccount(userdata);
             dialog.dispose(); // Dispose of the dialog
+            LoadData();
         } else {
             System.out.println("User canceled the input.");
             dialog.dispose(); // Dispose of the dialog
@@ -341,6 +352,22 @@ public class ManageAccounts extends javax.swing.JFrame {
 
     void DeleteAccount(){
 
+    }
+
+    void LoadData(){
+        userTableModel = (DefaultTableModel) jTable1.getModel();
+        userList = UserMYSQLConnection.getInstance().getUser();
+        userTableModel.setRowCount(0); // Clear existing rows
+
+        for (UserModel user : userList) {
+            Object[] rowData = {
+                user.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                user.getRole()
+            };
+            userTableModel.addRow(rowData);
+        }
     }
     /**
      * @param args the command line arguments
