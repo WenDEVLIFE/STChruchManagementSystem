@@ -77,6 +77,32 @@ public class BookMYSQL {
         return reservations;
     }
 
+    // get the pending status
+    public static List<ReservationModel> getReservationPending() {
+        String query = "SELECT * FROM reservationtable WHERE status = 'Pending'";
+        List<ReservationModel> reservations = new java.util.ArrayList<>();
+
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement = connection.prepareStatement(query);
+             java.sql.ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String reservationID = resultSet.getString("reservation_id");
+                String event = resultSet.getString("event");
+                String date = resultSet.getString("date");
+                String time = resultSet.getString("time");
+                String status = resultSet.getString("status");
+                String reason = resultSet.getString("reason");
+                reservations.add(new ReservationModel(reservationID, event, date, time, status, reason));
+            }
+        } catch (java.sql.SQLException e) {
+            System.err.println("Error fetching reservations: " + e.getMessage());
+        }
+
+        return reservations;
+    }
+
     public static String getRejectReason(String reservationId) {
         String query = "SELECT reason FROM reservationtable WHERE reservation_id = ?";
 
@@ -130,6 +156,45 @@ public class BookMYSQL {
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
             System.out.println("An error occurred while deleting the reservation: " + e.getMessage());
+        }
+    }
+
+    // This will update the reservation status
+    public static void updateReservationStatus(String reservationID, String status) {
+        String query = "UPDATE reservationtable SET status = ? WHERE reservation_id = ?";
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, status);
+            statement.setString(2, reservationID);
+            statement.executeUpdate();
+
+            System.out.println("Reservation with ID " + reservationID + " updated successfully.");
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while updating the reservation: " + e.getMessage());
+        }
+    }
+
+    // This will update the reservation status to rejected
+    public static void rejected(String reservationID, String reason, String status, JDialog dialog) {
+        String query = "UPDATE reservationtable SET status = ?, reason = ? WHERE reservation_id = ?";
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, status);
+            statement.setString(2, reason);
+            statement.setString(3, reservationID);
+            statement.executeUpdate();
+
+            System.out.println("Reservation with ID " + reservationID + " updated successfully.");
+            JOptionPane.showMessageDialog(null, "Reservation Rejected Successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            dialog.dispose();
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            System.out.println("An error occurred while updating the reservation: " + e.getMessage());
         }
     }
 

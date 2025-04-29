@@ -4,19 +4,29 @@
  */
 package UI;
 
+import database.BookMYSQL;
+import model.ReservationModel;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 /**
  *
  * @author Frouen Junior
  */
 public class ManagePendingBooking extends javax.swing.JFrame {
-
+    private DefaultTableModel bookingModel;
+    List<ReservationModel> reservationList;
     /**
      * Creates new form ManagePendingBooking
      */
     public ManagePendingBooking() {
         initComponents();
+        String columnNames[] = {"Reservation ID", "Event", "Date", "Time", "Status"};
+        bookingModel = new DefaultTableModel(columnNames, 0);
+        jTable1.setModel(bookingModel);
+        loadBookings();
     }
 
     /**
@@ -130,7 +140,56 @@ public class ManagePendingBooking extends javax.swing.JFrame {
 
     // This is for rejection
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        rejectionDialog();
+      int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow != -1) {
+            String reservationID = (String) bookingModel.getValueAt(selectedRow, 0);
+            String event = (String) bookingModel.getValueAt(selectedRow, 1);
+            String date = (String) bookingModel.getValueAt(selectedRow, 2);
+            String time = (String) bookingModel.getValueAt(selectedRow, 3);
+            String status = "Rejected";
+
+            JPanel panel = new JPanel();
+            JLabel label = new JLabel("Reason for rejecting the booking:");
+            JTextField textField = new JTextField(20);
+            panel.add(label);
+
+            panel.add(textField);
+
+            // Custom button options
+            Object[] options = {"Submit", "Cancel"};
+
+            // Wrap JOptionPane in a JDialog
+            javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
+                    panel,
+                    javax.swing.JOptionPane.PLAIN_MESSAGE,
+                    javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                    null,
+                    options,
+                    options[0]
+            );
+            javax.swing.JDialog dialog = optionPane.createDialog(this, "Reject");
+            dialog.setVisible(true);
+
+            // Get the selected option
+            Object selectedValue = optionPane.getValue();
+
+            if (selectedValue == options[0]) {
+                // User clicked "Save"
+                String reason = textField.getText();
+                // Handle the reason for rejection here
+                // Update the status in the database
+                BookMYSQL.rejected(reservationID, reason, status, dialog);
+                loadBookings();
+            } else {
+                // User clicked "Cancel" or closed the dialog
+                System.out.println("Rejection cancelled.");
+                dialog.dispose();
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a booking to reject.");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -139,49 +198,44 @@ public class ManagePendingBooking extends javax.swing.JFrame {
         this.dispose(); // Close the current window
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    // This is for the approved
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow != -1) {
+            String reservationID = (String) bookingModel.getValueAt(selectedRow, 0);
+            String event = (String) bookingModel.getValueAt(selectedRow, 1);
+            String date = (String) bookingModel.getValueAt(selectedRow, 2);
+            String time = (String) bookingModel.getValueAt(selectedRow, 3);
+            String status = "Accepted";
+
+            // Update the status in the database
+            BookMYSQL.updateReservationStatus(reservationID, status);
+
+            loadBookings();
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a booking to approve.");
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    void rejectionDialog(){
 
-        JPanel panel = new JPanel();
-        JLabel label = new JLabel("Reason for rejecting the booking:");
-        JTextField textField = new JTextField(20);
-        panel.add(label);
+    void loadBookings() {
+        // This method should load the bookings from the database and populate the table
+        // For now, we will just add some dummy data
+        bookingModel.setRowCount(0); // Clear existing rows
+        reservationList = BookMYSQL.getReservationPending();
 
-        panel.add(textField);
-
-        // Custom button options
-        Object[] options = {"Submit", "Cancel"};
-
-        // Wrap JOptionPane in a JDialog
-        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
-                panel,
-                javax.swing.JOptionPane.PLAIN_MESSAGE,
-                javax.swing.JOptionPane.OK_CANCEL_OPTION,
-                null,
-                options,
-                options[0]
-        );
-        javax.swing.JDialog dialog = optionPane.createDialog(this, "Reject");
-        dialog.setVisible(true);
-
-        // Get the selected option
-        Object selectedValue = optionPane.getValue();
-
-        if (selectedValue == options[0]) {
-            // User clicked "Save"
-            String reason = textField.getText();
-            // Handle the reason for rejection here
-            System.out.println("Rejection reason: " + reason);
-            dialog.dispose();
-        } else {
-            // User clicked "Cancel" or closed the dialog
-            System.out.println("Rejection cancelled.");
-            dialog.dispose();
+        for (ReservationModel reservation : reservationList) {
+            String[] rowData = {
+                    reservation.getReservationID(),
+                    reservation.getEvent(),
+                    reservation.getDate(),
+                    reservation.getTime(),
+                    reservation.getStatus()
+            };
+            bookingModel.addRow(rowData);
         }
-
     }
 
     /**

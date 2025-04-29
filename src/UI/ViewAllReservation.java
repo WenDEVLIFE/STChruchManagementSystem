@@ -4,17 +4,29 @@
  */
 package UI;
 
+import database.BookMYSQL;
+import model.ReservationModel;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+
 /**
  *
  * @author Frouen Junior
  */
 public class ViewAllReservation extends javax.swing.JFrame {
-
+    private DefaultTableModel bookingModel;
+    List<ReservationModel> reservationList;
     /**
      * Creates new form ViewAllReservation
      */
     public ViewAllReservation() {
         initComponents();
+        String columnNames[] = {"Reservation ID", "Event", "Date", "Time", "Status"};
+        bookingModel = new DefaultTableModel(columnNames, 0);
+        jTable1.setModel(bookingModel);
+        loadBookings();
     }
 
     /**
@@ -80,9 +92,14 @@ public class ViewAllReservation extends javax.swing.JFrame {
         });
 
         jButton2.setText("SEARCH");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Verdana", 1, 8)); // NOI18N
-        jLabel4.setText("SEARCH YOUR NAME, RESERVATION ID, EVENT OR DATE");
+        jLabel4.setText("SEARCH YOUr RESERVATION ID, EVENT OR DATE");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,8 +156,22 @@ public class ViewAllReservation extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+     // This is for the delete
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+
+        if (selectedRow != -1) {
+            int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this booking?", "Delete Booking", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                String reservationID = (String) jTable1.getValueAt(selectedRow, 0);
+                String event = (String) jTable1.getValueAt(selectedRow, 1);
+                BookMYSQL.deleteReservation(reservationID, event );
+                loadBookings();
+                javax.swing.JOptionPane.showMessageDialog(this, "Booking deleted successfully.", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a booking to delete.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -153,6 +184,56 @@ public class ViewAllReservation extends javax.swing.JFrame {
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
+
+    // This is for the searching
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String searchText = jTextField3.getText();
+
+        // Clear the table before adding search results
+        bookingModel.setRowCount(0);
+        // filter the reservation list based on the search text
+        for (ReservationModel reservation : reservationList) {
+            if (reservation.getEvent().contains(searchText) ||
+                reservation.getDate().contains(searchText) ||
+                reservation.getTime().contains(searchText) ||
+                reservation.getReservationID().contains(searchText)) {
+
+                String[] rowData = {
+                    reservation.getReservationID(),
+                    reservation.getEvent(),
+                    reservation.getDate(),
+                    reservation.getTime(),
+                    reservation.getStatus()
+                };
+                bookingModel.addRow(rowData);
+            }
+        }
+        // If no results found, you can show a message or handle it accordingly
+        if (bookingModel.getRowCount() == 0) {
+            // Show a message dialog or handle no results found
+            javax.swing.JOptionPane.showMessageDialog(this, "No results found for: " + searchText);
+        }
+        jTextField3.setText(""); // Clear the search field after searching
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    void loadBookings() {
+        // This method should load the bookings from the database and populate the table
+        // For now, we will just add some dummy data
+        bookingModel.setRowCount(0); // Clear existing rows
+        reservationList = BookMYSQL.getAllReservations1();
+
+        for (ReservationModel reservation : reservationList) {
+            String[] rowData = {
+                    reservation.getReservationID(),
+                    reservation.getEvent(),
+                    reservation.getDate(),
+                    reservation.getTime(),
+                    reservation.getStatus()
+            };
+            bookingModel.addRow(rowData);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -198,8 +279,6 @@ public class ViewAllReservation extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }

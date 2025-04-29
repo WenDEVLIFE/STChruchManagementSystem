@@ -135,7 +135,7 @@ public class ViewBookings extends javax.swing.JFrame {
         this.dispose(); // Close the current window
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    // This will dete the books
+    // This will delete the books
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int selectedRow = jTable1.getSelectedRow();
 
