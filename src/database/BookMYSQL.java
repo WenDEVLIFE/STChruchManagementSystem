@@ -279,12 +279,14 @@ public class BookMYSQL {
 
     public void insertChristening(Map<String, Object> christening, JDialog dialog) {
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM christening_table";
+        String countChristeningsSQL = "SELECT COUNT(*) AS count FROM reservationtable WHERE date_filled = ? AND event = 'Christening'";
         String insertSQL = "INSERT INTO christening_table (reservation_id, child_name, parent_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason, user_id, date_filled) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
                 MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
              java.sql.Statement statement = connection.createStatement();
+             java.sql.PreparedStatement countStatement = connection.prepareStatement(countChristeningsSQL);
              java.sql.PreparedStatement christeningStatement = connection.prepareStatement(insertSQL);
              java.sql.PreparedStatement reservationStatement = connection.prepareStatement(insertReservationSQL)) {
 
@@ -301,6 +303,18 @@ public class BookMYSQL {
             if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
                 JOptionPane.showMessageDialog(null, "Reservations cannot be made on Sundays.", "Invalid Date", JOptionPane.ERROR_MESSAGE);
                 return;
+            }
+
+            // Get today's date for date_filled
+            String currentDate = LocalDate.now().format(formatter);
+
+            // Check if the limit of 3 christenings per day is reached based on date_filled and event
+            countStatement.setString(1, currentDate);
+            try (java.sql.ResultSet resultSet = countStatement.executeQuery()) {
+                if (resultSet.next() && resultSet.getInt("count") >= 3) {
+                    JOptionPane.showMessageDialog(null, "The maximum number of christenings for this date has been reached.", "Limit Reached", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
 
             // Generate the custom ID
@@ -322,7 +336,6 @@ public class BookMYSQL {
             christeningStatement.setString(6, (String) christening.get("timeSlot"));
             christeningStatement.setInt(7, (int) christening.get("user_id"));
 
-
             int rowsInserted = christeningStatement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("Christening record inserted successfully with ID: " + newId);
@@ -334,6 +347,8 @@ public class BookMYSQL {
                 reservationStatement.setString(4, (String) christening.get("timeSlot"));
                 reservationStatement.setString(5, "Pending");
                 reservationStatement.setString(6, "n/a");
+                reservationStatement.setInt(7, (int) christening.get("user_id"));
+                reservationStatement.setString(8, currentDate); // Use today's date for date_filled
 
                 int reservationRowsInserted = reservationStatement.executeUpdate();
                 if (reservationRowsInserted > 0) {
@@ -347,10 +362,10 @@ public class BookMYSQL {
             }
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
-            System.out.println("An error occurred while inserting christening data: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "An error occurred while inserting christening data: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
     // insert funeral
     public  void insertFuneral(Map<String, Object> funeral, JDialog dialog) {
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM christening_table";
@@ -565,5 +580,40 @@ public class BookMYSQL {
             e.printStackTrace();
         }
         return reservations;
+    }
+
+    public void notifyUpcomingEvents() {
+        String query = "SELECT reservation_id, event, date, user_id FROM reservationtable WHERE date = ?";
+        LocalDate nextDay = LocalDate.now().plusDays(1);
+        String nextDayString = nextDay.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        try (Connection connection = DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, nextDayString);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String reservationId = resultSet.getString("reservation_id");
+                String event = resultSet.getString("event");
+                String date = resultSet.getString("date");
+                int userId = resultSet.getInt("user_id");
+
+                // Notify the user
+                JOptionPane.showMessageDialog(null,
+                        "Reminder: Your " + event + " reservation (ID: " + reservationId + ") is scheduled for " + date + ".",
+                        "Upcoming Event Notification",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                System.out.println("Notification sent to user ID: " + userId + " for reservation ID: " + reservationId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "An error occurred while fetching upcoming events: " + e.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

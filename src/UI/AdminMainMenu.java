@@ -4,6 +4,8 @@
  */
 package UI;
 
+import database.BookMYSQL;
+
 /**
  *
  * @author Frouen Junior
@@ -15,6 +17,7 @@ public class AdminMainMenu extends javax.swing.JFrame {
      */
     public AdminMainMenu() {
         initComponents();
+        InitializeNotification();
     }
 
     /**
@@ -200,6 +203,11 @@ public class AdminMainMenu extends javax.swing.JFrame {
                 new AdminMainMenu().setVisible(true);
             }
         });
+    }
+
+    void InitializeNotification() {
+
+        BookMYSQL.getInstance().notifyUpcomingEvents();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

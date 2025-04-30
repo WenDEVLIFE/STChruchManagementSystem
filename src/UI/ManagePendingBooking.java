@@ -180,6 +180,7 @@ public class ManagePendingBooking extends javax.swing.JFrame {
                 // Handle the reason for rejection here
                 // Update the status in the database
                 BookMYSQL.rejected(reservationID, reason, status, dialog);
+                JOptionPane.showMessageDialog(this, "The Booking " + reservationID + " has been rejected.");
                 loadBookings();
             } else {
                 // User clicked "Cancel" or closed the dialog
@@ -200,7 +201,6 @@ public class ManagePendingBooking extends javax.swing.JFrame {
 
     // This is for the approved
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
         int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow != -1) {
@@ -212,7 +212,7 @@ public class ManagePendingBooking extends javax.swing.JFrame {
 
             // Update the status in the database
             BookMYSQL.updateReservationStatus(reservationID, status);
-
+            JOptionPane.showMessageDialog(this, "Booking " + reservationID + " has been approved.");
             loadBookings();
         } else {
             JOptionPane.showMessageDialog(this, "Please select a booking to approve.");
