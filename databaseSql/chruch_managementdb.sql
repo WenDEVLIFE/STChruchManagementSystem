@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 29, 2025 at 04:31 PM
+-- Generation Time: Apr 30, 2025 at 05:06 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -42,10 +42,9 @@ CREATE TABLE `christening_table` (
 --
 
 INSERT INTO `christening_table` (`reservation_id`, `child_name`, `parent_name`, `contact_number`, `date`, `time_slot`, `user_id`) VALUES
-('CHR000001', 'Doewew', 'Doedad', '0942323', '2025-04-30', '9:00 AM', 1),
-('CHR000002', 'Doewew', 'DoeDad', '0433434', '2025-04-30', '9:00 AM', 1),
-('CHR000003', 'DoeSon', 'DoeDad', '098423', '2025-04-30', '9:00 AM', 1),
-('CHR000004', 'DoeSon', 'DoeDad', '094343', '2025-04-30', '09:00AM', 1);
+('CHR000001', 'DoeSon', 'DoeDad', '095343', '2025-05-03', '09:00 AM', 1),
+('CHR000002', 'DoeDaugther', 'DoeMom', '0953434', '2025-05-03', '10:00 AM', 1),
+('CHR000003', 'Anna', 'John', '09534434', '2025-05-03', '11:00 AM', 1);
 
 -- --------------------------------------------------------
 
@@ -75,15 +74,19 @@ CREATE TABLE `reservationtable` (
   `date` varchar(255) NOT NULL,
   `time` varchar(255) NOT NULL,
   `status` varchar(255) NOT NULL,
-  `reason` varchar(255) NOT NULL
+  `reason` varchar(255) NOT NULL,
+  `user_id` int(255) NOT NULL,
+  `date_filled` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `reservationtable`
 --
 
-INSERT INTO `reservationtable` (`reservation_id`, `event`, `date`, `time`, `status`, `reason`) VALUES
-('CHR000004', 'Christening', '2025-04-30', '09:00AM', 'Pending', 'n/a');
+INSERT INTO `reservationtable` (`reservation_id`, `event`, `date`, `time`, `status`, `reason`, `user_id`, `date_filled`) VALUES
+('CHR000001', 'Christening', '2025-05-03', '09:00 AM', 'Accepted', 'n/a', 1, '2025-04-30'),
+('CHR000002', 'Christening', '2025-05-03', '10:00 AM', 'Accepted', 'n/a', 1, '2025-04-30'),
+('CHR000003', 'Christening', '2025-05-03', '11:00 AM', 'Accepted', 'n/a', 1, '2025-04-30');
 
 -- --------------------------------------------------------
 
