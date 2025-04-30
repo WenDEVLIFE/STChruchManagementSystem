@@ -39,11 +39,15 @@ public class LoginMYSQL {
                         // Open the admin main menu
                         AdminMainMenu adminMenu = new AdminMainMenu();
                         adminMenu.setVisible(true);
+                        adminMenu.setResizable(false);
+                        adminMenu.setLocationRelativeTo(null);
                         login.dispose();
                     } else if ("User".equals(role)) {
                         // Open the user main menu
                         UserMainMenu userMenu = new UserMainMenu(userId);
                         userMenu.setVisible(true);
+                        userMenu.setResizable(false);
+                        userMenu.setLocationRelativeTo(null);
                         login.dispose();
                     }
                 } else {

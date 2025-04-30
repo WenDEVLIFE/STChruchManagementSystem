@@ -368,9 +368,9 @@ public class BookMYSQL {
     }
     // insert funeral
     public  void insertFuneral(Map<String, Object> funeral, JDialog dialog) {
-        String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM christening_table";
-        String insertSQL = "INSERT INTO funeral_table (reservation_id, desceased_name, family_rep_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason) VALUES (?, ?, ?, ?, ?, ?)";
+        String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM funeral_table";
+        String insertSQL = "INSERT INTO funeral_table (reservation_id, deceased_name, family_rep_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason, user_id, date_filled) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
                 MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
@@ -405,13 +405,15 @@ public class BookMYSQL {
 
             // Insert into christening_table
             christeningStatement.setString(1, newId);
-            christeningStatement.setString(2, (String) funeral.get("deseaced_name"));
+            christeningStatement.setString(2, (String) funeral.get("deceased_name"));
             christeningStatement.setString(3, (String) funeral.get("family_rep_name"));
             christeningStatement.setString(4, (String) funeral.get("contactNumber"));
             christeningStatement.setString(5, dateString);
             christeningStatement.setString(6, (String) funeral.get("timeSlot"));
             christeningStatement.setInt(7, (int) funeral.get("user_id"));
 
+            // Get today's date for date_filled
+            String currentDate = LocalDate.now().format(formatter);
 
             int rowsInserted = christeningStatement.executeUpdate();
             if (rowsInserted > 0) {
@@ -424,16 +426,16 @@ public class BookMYSQL {
                 reservationStatement.setString(4, (String) funeral.get("timeSlot"));
                 reservationStatement.setString(5, "Pending");
                 reservationStatement.setString(6, "n/a");
+                reservationStatement.setInt(7, (int) funeral.get("user_id"));
+                reservationStatement.setString(8, currentDate); // Use today's date for date_filled
 
                 int reservationRowsInserted = reservationStatement.executeUpdate();
                 if (reservationRowsInserted > 0) {
                     System.out.println("Reservation record inserted successfully with ID: " + newId);
-
-                    JOptionPane.showMessageDialog(null, "YOUR RESERVATION ID NUMBER IS " + newId,
-                            "Success", JOptionPane.INFORMATION_MESSAGE);
-
                     dialog.dispose();
                 }
+                JOptionPane.showMessageDialog(null, "YOUR RESERVATION ID NUMBER IS " + newId,
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
@@ -445,9 +447,9 @@ public class BookMYSQL {
     // insert wedding
     public void insertWedding(Map<String, Object> wedding, JDialog dialog) {
         // Implementation for inserting wedding data into MySQL database
-        String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM christening_table";
+        String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM wedding_table";
         String insertSQL = "INSERT INTO wedding_table (reservation_id, groom_name, bride_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason, user_id, date_filled) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
                 MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
@@ -470,13 +472,14 @@ public class BookMYSQL {
                 return;
             }
 
+
             // Generate the custom ID
-            String newId = "FUN000001"; // Default ID if no records exist
+            String newId = "WED000001"; // Default ID if no records exist
             try (java.sql.ResultSet resultSet = statement.executeQuery(generateIdSQL)) {
                 if (resultSet.next() && resultSet.getString("reservation_id") != null) {
                     String maxId = resultSet.getString("reservation_id");
                     int numericPart = Integer.parseInt(maxId.substring(3)); // Extract numeric part
-                    newId = String.format("FUN%06d", numericPart + 1); // Increment and format
+                    newId = String.format("WED%06d", numericPart + 1); // Increment and format
                 }
             }
 
@@ -490,27 +493,32 @@ public class BookMYSQL {
             christeningStatement.setInt(7, (int) wedding.get("user_id"));
 
 
+            // Get today's date for date_filled
+            String currentDate = LocalDate.now().format(formatter);
+
             int rowsInserted = christeningStatement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("Christening record inserted successfully with ID: " + newId);
 
                 // Insert into reservationtable
                 reservationStatement.setString(1, newId);
-                reservationStatement.setString(2, "Funeral");
+                reservationStatement.setString(2, "Wedding");
                 reservationStatement.setString(3, dateString);
                 reservationStatement.setString(4, (String) wedding.get("timeSlot"));
                 reservationStatement.setString(5, "Pending");
                 reservationStatement.setString(6, "n/a");
+                reservationStatement.setInt(7, (int) wedding.get("user_id"));
+                reservationStatement.setString(8, currentDate); // Use today's date for date_filled
+
 
                 int reservationRowsInserted = reservationStatement.executeUpdate();
                 if (reservationRowsInserted > 0) {
                     System.out.println("Reservation record inserted successfully with ID: " + newId);
-
-                    JOptionPane.showMessageDialog(null, "YOUR RESERVATION ID NUMBER IS " + newId,
-                            "Success", JOptionPane.INFORMATION_MESSAGE);
-
                     dialog.dispose();
                 }
+
+                JOptionPane.showMessageDialog(null, "YOUR RESERVATION ID NUMBER IS " + newId,
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
@@ -583,7 +591,7 @@ public class BookMYSQL {
     }
 
     public void notifyUpcomingEvents() {
-        String query = "SELECT reservation_id, event, date, user_id FROM reservationtable WHERE date = ?";
+        String query = "SELECT reservation_id, event, date, user_id FROM reservationtable WHERE date = ? AND status = 'Accepted'";
         LocalDate nextDay = LocalDate.now().plusDays(1);
         String nextDayString = nextDay.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 

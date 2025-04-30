@@ -126,6 +126,7 @@ public class UserMainMenu extends javax.swing.JFrame {
         BookAnEvent event = new BookAnEvent(userId);
         event.setVisible(true);
         event.setLocationRelativeTo(null);
+        event.setResizable(false);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -134,6 +135,7 @@ public class UserMainMenu extends javax.swing.JFrame {
         Login login = new Login();
         login.setVisible(true);
         login.setLocationRelativeTo(null);
+        login.setResizable(false);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -142,6 +144,7 @@ public class UserMainMenu extends javax.swing.JFrame {
         ViewMyBooking view = new ViewMyBooking(userId);
         view.setVisible(true);
         view.setLocationRelativeTo(null);
+        view.setResizable(false);
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -150,6 +153,7 @@ public class UserMainMenu extends javax.swing.JFrame {
        CancelBooking cancelBooking = new CancelBooking(userId);
        cancelBooking.setVisible(true);
        cancelBooking.setLocationRelativeTo(null);
+        cancelBooking.setResizable(false);
          this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -158,6 +162,7 @@ public class UserMainMenu extends javax.swing.JFrame {
         StatusOfMyBooking status = new StatusOfMyBooking(userId);
         status.setVisible(true);
         status.setLocationRelativeTo(null);
+        status.setResizable(false);
         this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 

@@ -131,12 +131,14 @@ public class AdminMainMenu extends javax.swing.JFrame {
         ViewBookings event = new ViewBookings();
         event.setVisible(true);
         event.setLocationRelativeTo(null);
+        event.setResizable(false);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Login login = new Login();
         login.setVisible(true);
+        login.setResizable(false);
         login.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -145,6 +147,7 @@ public class AdminMainMenu extends javax.swing.JFrame {
         ManagePendingBooking view = new ManagePendingBooking();
         view.setVisible(true);
         view.setLocationRelativeTo(null);
+        view.setResizable(false);
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -152,6 +155,7 @@ public class AdminMainMenu extends javax.swing.JFrame {
         ViewAllReservation cancelBooking = new ViewAllReservation();
         cancelBooking.setVisible(true);
         cancelBooking.setLocationRelativeTo(null);
+        cancelBooking.setResizable(false);
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -160,12 +164,14 @@ public class AdminMainMenu extends javax.swing.JFrame {
         ManageAccounts status = new ManageAccounts();
         status.setVisible(true);
         status.setLocationRelativeTo(null);
+        status.setResizable(false);
         this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         PrintReport report = new PrintReport();
         report.setVisible(true);
+        report.setResizable(false);
         report.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_jButton6ActionPerformed

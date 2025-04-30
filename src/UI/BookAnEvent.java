@@ -190,7 +190,9 @@ public class BookAnEvent extends javax.swing.JFrame {
             // Check if any field is empty
             if (childName.isEmpty() || parentName.isEmpty() || contactNumber.isEmpty() || date.isEmpty() || timeSlot.isEmpty()) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            } else {
+            } else if (!contactNumber.matches("\\d+")) { // Validate that contact number contains only digits
+                javax.swing.JOptionPane.showMessageDialog(this, "Please enter a valid phone number (digits only).", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }else {
                 // Validate date format
                 try {
                     java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
@@ -276,6 +278,8 @@ public class BookAnEvent extends javax.swing.JFrame {
             // Check if any field is empty
             if (groomName.isEmpty() || brideName.isEmpty() || contactNumber.isEmpty() || date.isEmpty() || timeSlot.isEmpty()) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }else if (!contactNumber.matches("\\d+")) { // Validate that contact number contains only digits
+                javax.swing.JOptionPane.showMessageDialog(this, "Please enter a valid phone number (digits only).", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             } else {
                 // Validate date format
                 try {
@@ -360,7 +364,11 @@ public class BookAnEvent extends javax.swing.JFrame {
             // Check if any field is empty
             if (deceasedName.isEmpty() || familyRepName.isEmpty() || contactNumber.isEmpty() || date.isEmpty() || timeSlot.isEmpty()) {
                 javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            } else {
+            }
+            else if (!contactNumber.matches("\\d+")) { // Validate that contact number contains only digits
+                javax.swing.JOptionPane.showMessageDialog(this, "Please enter a valid phone number (digits only).", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+            else {
                 // Validate date format
                 try {
                     java.text.DateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");

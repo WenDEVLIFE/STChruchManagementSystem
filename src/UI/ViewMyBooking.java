@@ -162,6 +162,7 @@ public class ViewMyBooking extends javax.swing.JFrame {
         UserMainMenu userMainMenu = new UserMainMenu(userId);
         userMainMenu.setVisible(true);
         userMainMenu.setLocationRelativeTo(null);
+        userMainMenu.setResizable(false);
         this.dispose(); // Close the current window
     }//GEN-LAST:event_jButton4ActionPerformed
 
