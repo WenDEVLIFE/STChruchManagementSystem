@@ -206,8 +206,8 @@ public class BookAnEvent extends javax.swing.JFrame {
                     System.out.println("Date: " + date);
                     System.out.println("Time Slot: " + timeSlot);
                     Map <String, Object> christeningDetails = new HashMap<>();
-                    christeningDetails.put("child_name", childName);
-                    christeningDetails.put("parent_name", parentName);
+                    christeningDetails.put("childName", childName);
+                    christeningDetails.put("parentName", parentName);
                     christeningDetails.put("contactNumber", contactNumber);
                     christeningDetails.put("date", date);
                     christeningDetails.put("timeSlot", timeSlot);
