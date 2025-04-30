@@ -6,6 +6,7 @@ package UI;
 
 import database.BookMYSQL;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -204,15 +205,14 @@ public class BookAnEvent extends javax.swing.JFrame {
                     System.out.println("Contact Number: " + contactNumber);
                     System.out.println("Date: " + date);
                     System.out.println("Time Slot: " + timeSlot);
-
-                    BookMYSQL.getInstance().insertChristening(Map.of(
-                            "childName", childName,
-                            "parentName", parentName,
-                            "contactNumber", contactNumber,
-                            "date", date,
-                            "timeSlot", timeSlot,
-                            "user_id", userId
-                    ), dialog);
+                    Map <String, Object> christeningDetails = new HashMap<>();
+                    christeningDetails.put("child_name", childName);
+                    christeningDetails.put("parent_name", parentName);
+                    christeningDetails.put("contactNumber", contactNumber);
+                    christeningDetails.put("date", date);
+                    christeningDetails.put("timeSlot", timeSlot);
+                    christeningDetails.put("user_id", userId);
+                    BookMYSQL.getInstance().insertChristening(christeningDetails, dialog);
                 } catch (java.text.ParseException e) {
                     // Show error if date is invalid
                     javax.swing.JOptionPane.showMessageDialog(this, "Invalid date format. Please use YYYY-MM-DD.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -292,14 +292,14 @@ public class BookAnEvent extends javax.swing.JFrame {
                     System.out.println("Contact Number: " + contactNumber);
                     System.out.println("Date: " + date);
                     System.out.println("Time Slot: " + timeSlot);
-                    BookMYSQL.getInstance().insertWedding(Map.of(
-                            "groom_name", groomName,
-                            "brides_name", brideName,
-                            "contactNumber", contactNumber,
-                            "date", date,
-                            "timeSlot", timeSlot,
-                            "user_id", userId
-                    ), dialog);
+                    Map <String, Object> weddingDetails = new HashMap<>();
+                    weddingDetails.put("groom_name", groomName);
+                    weddingDetails.put("brides_name", brideName);
+                    weddingDetails.put("contactNumber", contactNumber);
+                    weddingDetails.put("date", date);
+                    weddingDetails.put("timeSlot", timeSlot);
+                    weddingDetails.put("user_id", userId);
+                    BookMYSQL.getInstance().insertWedding(weddingDetails, dialog);
                 } catch (java.text.ParseException e) {
                     // Show error if date is invalid
                     javax.swing.JOptionPane.showMessageDialog(this, "Invalid date format. Please use YYYY-MM-DD.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -380,14 +380,15 @@ public class BookAnEvent extends javax.swing.JFrame {
                     System.out.println("Contact Number: " + contactNumber);
                     System.out.println("Date: " + date);
                     System.out.println("Time Slot: " + timeSlot);
-                    BookMYSQL.getInstance().insertFuneral(Map.of(
-                            "deceased_name", deceasedName,
-                            "family_rep_name", familyRepName,
-                            "contactNumber", contactNumber,
-                            "date", date,
-                            "timeSlot", timeSlot,
-                            "user_id", userId
-                    ), dialog);
+
+                    Map <String , Object> funeralDetails = new HashMap<>();
+                    funeralDetails.put("deceased_name", deceasedName);
+                    funeralDetails.put("family_rep_name", familyRepName);
+                    funeralDetails.put("contactNumber", contactNumber);
+                    funeralDetails.put("date", date);
+                    funeralDetails.put("timeSlot", timeSlot);
+                    funeralDetails.put("user_id", userId);
+                    BookMYSQL.getInstance().insertFuneral(funeralDetails, dialog);
                 } catch (java.text.ParseException e) {
                     // Show error if date is invalid
                     javax.swing.JOptionPane.showMessageDialog(this, "Invalid date format. Please use YYYY-MM-DD.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
