@@ -123,18 +123,50 @@ public class BookAnEvent extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
      // This is for the Christening
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showChristening();
-    }//GEN-LAST:event_jButton2ActionPerformed
+     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+         java.time.LocalTime currentTime = java.time.LocalTime.now();
+         java.time.LocalTime startTime = java.time.LocalTime.of(8, 0); // 8:00 AM
+         java.time.LocalTime endTime = java.time.LocalTime.of(16, 0); // 4:00 PM
 
+         if (currentTime.isAfter(startTime) && currentTime.isBefore(endTime)) {
+             showChristening();
+         } else {
+             javax.swing.JOptionPane.showMessageDialog(this,
+                     "Booking is only allowed between 8:00 AM and 4:00 PM.",
+                     "Time Restriction",
+                     javax.swing.JOptionPane.WARNING_MESSAGE);
+         }
+     }//GEN-LAST:event_jButton2ActionPerformed
     // This is for the funeral
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    showFuneral();
+        java.time.LocalTime currentTime = java.time.LocalTime.now();
+        java.time.LocalTime startTime = java.time.LocalTime.of(8, 0); // 8:00 AM
+        java.time.LocalTime endTime = java.time.LocalTime.of(16, 0); // 4:00 PM
+
+        if (currentTime.isAfter(startTime) && currentTime.isBefore(endTime)) {
+            showFuneral();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Booking is only allowed between 8:00 AM and 4:00 PM.",
+                    "Time Restriction",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     // This is for the wedding
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        showWedding();
+        java.time.LocalTime currentTime = java.time.LocalTime.now();
+        java.time.LocalTime startTime = java.time.LocalTime.of(8, 0); // 8:00 AM
+        java.time.LocalTime endTime = java.time.LocalTime.of(16, 0); // 4:00 PM
+
+        if (currentTime.isAfter(startTime) && currentTime.isBefore(endTime)) {
+            showWedding();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Booking is only allowed between 8:00 AM and 4:00 PM.",
+                    "Time Restriction",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     // This will show the Christening dialog
