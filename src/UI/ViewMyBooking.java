@@ -183,8 +183,6 @@ public class ViewMyBooking extends javax.swing.JFrame {
     // This is for the view the reject reason
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int selectedRow = jTable1.getSelectedRow();
-
-        showRejectDialog("reservationID", "reason");
         if (selectedRow != -1) {
             String status = (String) jTable1.getValueAt(selectedRow, 4);
             String reservationID = (String) jTable1.getValueAt(selectedRow, 0);
