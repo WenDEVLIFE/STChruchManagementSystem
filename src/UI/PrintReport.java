@@ -5,6 +5,7 @@
 package UI;
 
 import database.BookMYSQL;
+import java.awt.Color;
 import javax.swing.*;
 import java.io.File;
 import java.util.List;
@@ -21,6 +22,7 @@ public class PrintReport extends javax.swing.JFrame {
      */
     public PrintReport() {
         initComponents();
+             getContentPane().setBackground(new Color(214, 234, 248));
     }
 
     /**
@@ -47,6 +49,9 @@ public class PrintReport extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel3.setText("PRINT REPORTS");
 
+        jButton4.setBackground(new java.awt.Color(51, 204, 0));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Back to Main Menu");
         jButton4.setActionCommand("");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -55,6 +60,9 @@ public class PrintReport extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(204, 153, 0));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("CUSTOM DATE");
         jButton1.setActionCommand("");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -63,6 +71,9 @@ public class PrintReport extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(51, 255, 51));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("DAILY");
         jButton2.setActionCommand("");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -71,6 +82,9 @@ public class PrintReport extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setBackground(new java.awt.Color(255, 102, 0));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("WEEKLY");
         jButton3.setActionCommand("");
         jButton3.addActionListener(new java.awt.event.ActionListener() {

@@ -5,6 +5,7 @@
 package UI;
 
 import database.BookMYSQL;
+import java.awt.Color;
 import model.ReservationModel;
 
 import javax.swing.*;
@@ -28,6 +29,7 @@ public class ViewBookings extends javax.swing.JFrame {
         bookingModel = new DefaultTableModel(columnNames, 0);
         jTable1.setModel(bookingModel);
         loadBookings();
+               getContentPane().setBackground(new Color(214, 234, 248));
     }
 
     /**
@@ -64,6 +66,9 @@ public class ViewBookings extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel3.setText("VIEW BOOKINGS");
 
+        jButton4.setBackground(new java.awt.Color(51, 204, 0));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Back to Main Menu");
         jButton4.setActionCommand("");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -75,6 +80,9 @@ public class ViewBookings extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel2.setText("Options");
 
+        jButton1.setBackground(new java.awt.Color(153, 0, 0));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Delete");
         jButton1.setActionCommand("");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -88,7 +96,7 @@ public class ViewBookings extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(165, Short.MAX_VALUE)
+                .addContainerGap(163, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()

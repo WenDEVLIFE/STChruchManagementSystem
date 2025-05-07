@@ -5,6 +5,7 @@
 package UI;
 
 import database.BookMYSQL;
+import java.awt.Color;
 
 /**
  *
@@ -19,6 +20,7 @@ public class StatusOfMyBooking extends javax.swing.JFrame {
     public StatusOfMyBooking(int userId) {
         initComponents();
         StatusOfMyBooking.userId = userId;
+               getContentPane().setBackground(new Color(210, 180, 140));
     }
 
     /**
@@ -48,6 +50,9 @@ public class StatusOfMyBooking extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Verdana", 1, 8)); // NOI18N
         jLabel3.setText("SEARCH YOUR RESERVATION ID, EVENT OR DATE");
 
+        jButton4.setBackground(new java.awt.Color(51, 255, 0));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Back to Main Menu");
         jButton4.setActionCommand("");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -68,6 +73,9 @@ public class StatusOfMyBooking extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel4.setText("STATUS OF MY BOOKINGS");
 
+        jButton1.setBackground(new java.awt.Color(51, 51, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("SEARCH");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

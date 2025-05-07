@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import chruchmanagementsystem.PrintConfirmationPanel;
 import database.BookMYSQL;
+import java.awt.Color;
 import model.ReservationModel;
 
 /**
@@ -35,6 +36,7 @@ public class ViewMyBooking extends javax.swing.JFrame {
         bookingModel = new DefaultTableModel(columnNames, 0);
         jTable1.setModel(bookingModel);
         loadBookings();
+               getContentPane().setBackground(new Color(210, 180, 140));
     }
 
     /**
@@ -204,7 +206,7 @@ public class ViewMyBooking extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // This is for print
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         int selectedRow = jTable1.getSelectedRow();
 
         if (selectedRow != -1) {
@@ -239,7 +241,7 @@ public class ViewMyBooking extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Please select a reservation to print.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed//GEN-LAST:event_jButton2ActionPerformed
+    }                                                                                
 
     void loadBookings() {
         // This method should load the bookings from the database and populate the table

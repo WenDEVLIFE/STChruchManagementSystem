@@ -5,10 +5,15 @@
 package UI;
 
 import database.BookMYSQL;
+
+import java.awt.*;
+
 import model.ReservationModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 /**
@@ -27,6 +32,7 @@ public class ManagePendingBooking extends javax.swing.JFrame {
         bookingModel = new DefaultTableModel(columnNames, 0);
         jTable1.setModel(bookingModel);
         loadBookings();
+ getContentPane().setBackground(new Color(214, 234, 248));
     }
 
     /**
@@ -64,7 +70,10 @@ public class ManagePendingBooking extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setText("Reject");
+        jButton1.setBackground(new java.awt.Color(51, 51, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Decline");
         jButton1.setActionCommand("");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -72,6 +81,9 @@ public class ManagePendingBooking extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(51, 204, 0));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Back to Main Menu");
         jButton4.setActionCommand("");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -83,6 +95,9 @@ public class ManagePendingBooking extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel2.setText("Options");
 
+        jButton2.setBackground(new java.awt.Color(255, 51, 102));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Accept");
         jButton2.setActionCommand("");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -214,13 +229,62 @@ public class ManagePendingBooking extends javax.swing.JFrame {
             // Update the status in the database
             BookMYSQL.updateReservationStatus(reservationID, status);
             JOptionPane.showMessageDialog(this, "Booking " + reservationID + " has been approved.");
+            JFrame frame = new JFrame("Message");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(600, 400);
+            frame.setVisible(true);
+            showCustomDialog(frame, reservationID);
             loadBookings();
         } else {
             JOptionPane.showMessageDialog(this, "Please select a booking to approve.");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    public static void showCustomDialog(JFrame parentFrame, String reservationID) {
+        // Create a custom panel with a background color
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBackground(new Color(46, 155, 244)); // Set the background color (light blue)
 
+        // Create a label to display the message
+        JLabel messageLabel = new JLabel("✅ Booking " + reservationID + " has been approved.");
+        messageLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        messageLabel.setForeground(Color.WHITE);
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Create buttons
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(46, 155, 244)); // Same background color for the buttons panel
+
+        JButton okButton = new JButton("OK");
+        okButton.setBackground(new Color(34, 139, 34)); // Green color for the OK button
+        okButton.setForeground(Color.WHITE);
+        okButton.setFocusPainted(false);
+
+        // Add buttons to the button panel
+        buttonPanel.add(okButton);
+
+        // Add components to the main panel
+        panel.add(messageLabel, BorderLayout.CENTER);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Create a custom JDialog
+        JDialog customDialog = new JDialog(parentFrame, "Booking Approved", true);
+        customDialog.setContentPane(panel);
+        customDialog.setSize(400, 200);
+        customDialog.setLocationRelativeTo(parentFrame); // Center the dialog on the screen
+
+        // Action listener for the OK button
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                customDialog.dispose(); // Close the dialog when OK is clicked
+            }
+        });
+
+        // Show the custom dialog
+        customDialog.setVisible(true);
+    }
     void loadBookings() {
         // This method should load the bookings from the database and populate the table
         // For now, we will just add some dummy data

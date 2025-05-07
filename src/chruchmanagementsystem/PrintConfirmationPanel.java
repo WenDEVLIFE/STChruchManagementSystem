@@ -23,7 +23,7 @@ public class PrintConfirmationPanel extends JFrame {
         setLocationRelativeTo(null);
 
         panelToPrint = new JPanel();
-        panelToPrint.setBackground(Color.LIGHT_GRAY);
+        panelToPrint.setBackground(new Color(210, 180, 140));;
         panelToPrint.setLayout(new BoxLayout(panelToPrint, BoxLayout.Y_AXIS));
         panelToPrint.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 

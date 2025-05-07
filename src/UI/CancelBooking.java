@@ -5,6 +5,7 @@
 package UI;
 
 import database.BookMYSQL;
+import java.awt.Color;
 import model.ReservationModel;
 
 import javax.swing.*;
@@ -32,6 +33,7 @@ public class CancelBooking extends javax.swing.JFrame {
         bookingModel = new DefaultTableModel(columnNames, 0);
         jTable1.setModel(bookingModel);
         loadBookings();
+               getContentPane().setBackground(new Color(210, 180, 140));
     }
 
     /**
@@ -52,6 +54,9 @@ public class CancelBooking extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jButton4.setBackground(new java.awt.Color(102, 255, 51));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Back to Main Menu");
         jButton4.setActionCommand("");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -60,6 +65,9 @@ public class CancelBooking extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(51, 51, 255));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Cancel Booking");
         jButton1.setActionCommand("");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -92,7 +100,7 @@ public class CancelBooking extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(314, Short.MAX_VALUE)
+                .addContainerGap(312, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(159, 159, 159))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

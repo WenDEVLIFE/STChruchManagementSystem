@@ -5,9 +5,15 @@
 package UI;
 
 import database.UserMYSQLConnection;
+
+import java.awt.*;
+
 import model.UserModel;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +36,7 @@ public class ManageAccounts extends javax.swing.JFrame {
         userTableModel = new DefaultTableModel(columnNames, 0);
         jTable1.setModel(userTableModel);
         LoadData();
+         getContentPane().setBackground(new Color(214, 234, 248));
     }
 
     /**
@@ -65,6 +72,9 @@ public class ManageAccounts extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jButton1.setBackground(new java.awt.Color(255, 153, 0));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Create new account");
         jButton1.setActionCommand("");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -73,6 +83,9 @@ public class ManageAccounts extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(102, 204, 0));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Back to Main Menu");
         jButton4.setActionCommand("");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -87,6 +100,9 @@ public class ManageAccounts extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel3.setText("MANAGE ACCOUNTS");
 
+        jButton2.setBackground(new java.awt.Color(153, 0, 51));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Delete");
         jButton2.setActionCommand("");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -95,6 +111,9 @@ public class ManageAccounts extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setBackground(new java.awt.Color(255, 204, 0));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Edit");
         jButton3.setActionCommand("");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -114,7 +133,7 @@ public class ManageAccounts extends javax.swing.JFrame {
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(47, 47, 47))
             .addGroup(layout.createSequentialGroup()
@@ -129,12 +148,12 @@ public class ManageAccounts extends javax.swing.JFrame {
                         .addGap(217, 217, 217))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(294, 294, 294))))
+                        .addGap(309, 309, 309))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
+                .addGap(0, 14, Short.MAX_VALUE)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -177,68 +196,65 @@ public class ManageAccounts extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
 
-    void CreateAccount(){
-        // Create a panel to hold input fields
+    void CreateAccount() {
+        // Create main panel with background color
         javax.swing.JPanel panel = new javax.swing.JPanel();
-        panel.setLayout(new java.awt.GridLayout(0, 2, 5, 5)); // Grid layout for labels and fields
+        panel.setBackground(new java.awt.Color(214, 234, 248)); // Light gray
+        panel.setLayout(new javax.swing.BoxLayout(panel, javax.swing.BoxLayout.Y_AXIS));
+        panel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-// Add input fields
-        panel.add(new javax.swing.JLabel("Last Name:"));
+        // Create a sub-panel for the form inputs
+        javax.swing.JPanel formPanel = new javax.swing.JPanel(new java.awt.GridLayout(0, 2, 5, 5));
+        formPanel.setOpaque(false); // Keep background transparent to show parent panel color
+
+        // Input fields
         javax.swing.JTextField lastNameField = new javax.swing.JTextField();
-        panel.add(lastNameField);
-
-        panel.add(new javax.swing.JLabel("First Name:"));
         javax.swing.JTextField firstNameField = new javax.swing.JTextField();
-        panel.add(firstNameField);
-
-        panel.add(new javax.swing.JLabel("Middle Name:"));
         javax.swing.JTextField middleNameField = new javax.swing.JTextField();
-        panel.add(middleNameField);
-
-        panel.add(new javax.swing.JLabel("Contact Number:"));
         javax.swing.JTextField contactField = new javax.swing.JTextField();
-        panel.add(contactField);
-
-
-        panel.add(new javax.swing.JLabel("Address"));
         javax.swing.JTextField addressField = new javax.swing.JTextField();
-        panel.add(addressField);
-
-        panel.add(new javax.swing.JLabel("Username"));
         javax.swing.JTextField usernameField = new javax.swing.JTextField();
-        panel.add(usernameField);
-
-        panel.add(new javax.swing.JLabel("Password"));
         javax.swing.JPasswordField passwordField = new javax.swing.JPasswordField();
-        panel.add(passwordField);
-
-        panel.add(new javax.swing.JLabel("Confirm Password"));
         javax.swing.JPasswordField confirmpasswordField = new javax.swing.JPasswordField();
-        panel.add(confirmpasswordField);
-
-        panel.add(new javax.swing.JLabel("Role"));
         javax.swing.JComboBox<String> roleComboBox = new javax.swing.JComboBox<>(new String[]{"Admin", "User"});
-        panel.add(roleComboBox);
 
-    // Custom button options
-        Object[] options = {"Submit", "Cancel"};
+        formPanel.add(new javax.swing.JLabel("Last Name:")); formPanel.add(lastNameField);
+        formPanel.add(new javax.swing.JLabel("First Name:")); formPanel.add(firstNameField);
+        formPanel.add(new javax.swing.JLabel("Middle Name:")); formPanel.add(middleNameField);
+        formPanel.add(new javax.swing.JLabel("Contact Number:")); formPanel.add(contactField);
+        formPanel.add(new javax.swing.JLabel("Address:")); formPanel.add(addressField);
+        formPanel.add(new javax.swing.JLabel("Username:")); formPanel.add(usernameField);
+        formPanel.add(new javax.swing.JLabel("Password:")); formPanel.add(passwordField);
+        formPanel.add(new javax.swing.JLabel("Confirm Password:")); formPanel.add(confirmpasswordField);
+        formPanel.add(new javax.swing.JLabel("Role:")); formPanel.add(roleComboBox);
 
-    // Wrap JOptionPane in a JDialog
-        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
-                panel,
-                javax.swing.JOptionPane.PLAIN_MESSAGE,
-                javax.swing.JOptionPane.OK_CANCEL_OPTION,
-                null,
-                options,
-                options[0]
-        );
-        javax.swing.JDialog dialog = optionPane.createDialog(this, "Create New Account");
-        dialog.setVisible(true);
+        panel.add(formPanel);
 
-    // Handle user input
-        Object selectedValue = optionPane.getValue();
-        if (selectedValue != null && selectedValue.equals("Submit")) { // "Submit" button clicked
+        // Buttons
+        javax.swing.JButton submitButton = new javax.swing.JButton("Submit");
+        submitButton.setBackground(new java.awt.Color(0, 153, 76)); // Green
+        submitButton.setForeground(java.awt.Color.WHITE);
 
+        javax.swing.JButton cancelButton = new javax.swing.JButton("Cancel");
+        cancelButton.setBackground(new java.awt.Color(204, 0, 0)); // Red
+        cancelButton.setForeground(java.awt.Color.WHITE);
+
+        javax.swing.JPanel buttonPanel = new javax.swing.JPanel();
+        buttonPanel.setBackground(new java.awt.Color(214, 234, 248));
+        buttonPanel.add(submitButton);
+        buttonPanel.add(cancelButton);
+
+        panel.add(javax.swing.Box.createVerticalStrut(10)); // Add space between form and buttons
+        panel.add(buttonPanel);
+
+        javax.swing.JDialog dialog = new javax.swing.JDialog(this, "Create New Account", true);
+        dialog.setContentPane(panel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setResizable(false);
+
+        // Button Actions
+        submitButton.addActionListener(e -> {
             String lastName = lastNameField.getText();
             String firstName = firstNameField.getText();
             String middleName = middleNameField.getText();
@@ -249,23 +265,22 @@ public class ManageAccounts extends javax.swing.JFrame {
             String confirmPassword = new String(confirmpasswordField.getPassword());
             String role = (String) roleComboBox.getSelectedItem();
 
-            // Validate input
-            if (lastName.isEmpty() || firstName.isEmpty() || middleName.isEmpty() || contactNumber.isEmpty() || address.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            if (lastName.isEmpty() || firstName.isEmpty() || middleName.isEmpty() || contactNumber.isEmpty() ||
+                    address.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(dialog, "Please fill in all fields.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             if (!password.equals(confirmPassword)) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Passwords do not match.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(dialog, "Passwords do not match.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            if(UserMYSQLConnection.getInstance().checkUsernameExist(username)) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Username already exists.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            if (UserMYSQLConnection.getInstance().checkUsernameExist(username)) {
+                javax.swing.JOptionPane.showMessageDialog(dialog, "Username already exists.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-             //  TODO Here you can add code to save the account information to a database or file
             Map<String, Object> userdata = new HashMap<>();
             userdata.put("username", username);
             userdata.put("password", password);
@@ -277,16 +292,17 @@ public class ManageAccounts extends javax.swing.JFrame {
             userdata.put("address", address);
 
             UserMYSQLConnection.getInstance().createAcccount(userdata);
-            dialog.dispose(); // Dispose of the dialog
+            dialog.dispose();
             LoadData();
-        } else {
-            System.out.println("User canceled the input.");
-            dialog.dispose(); // Dispose of the dialog
-        }
+        });
+
+        cancelButton.addActionListener(e -> dialog.dispose());
+
+        dialog.setVisible(true);
     }
 
 
-    // Edit account
+
     void editAccount() {
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow == -1) {
@@ -300,84 +316,113 @@ public class ManageAccounts extends javax.swing.JFrame {
         String currentRole = (String) jTable1.getValueAt(selectedRow, 3);
 
         // Create a panel to hold input fields
-        javax.swing.JPanel panel = new javax.swing.JPanel();
-        panel.setLayout(new java.awt.GridLayout(0, 2, 5, 5)); // Grid layout for labels and fields
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(0, 2, 5, 5)); // Grid layout for labels and fields
+        panel.setBackground(new Color(248, 192, 176)); // Set a light background color
 
         // Add input fields with pre-filled data
-        panel.add(new javax.swing.JLabel("Username"));
-        javax.swing.JTextField usernameField = new javax.swing.JTextField(currentUsername);
+        panel.add(new JLabel("Username"));
+        JTextField usernameField = new JTextField(currentUsername);
         panel.add(usernameField);
 
-        panel.add(new javax.swing.JLabel("Password"));
-        javax.swing.JPasswordField passwordField = new javax.swing.JPasswordField(currentPassword);
+        panel.add(new JLabel("Password"));
+        JPasswordField passwordField = new JPasswordField(currentPassword);
         panel.add(passwordField);
 
-        panel.add(new javax.swing.JLabel("Confirm Password"));
-        javax.swing.JPasswordField confirmpasswordField = new javax.swing.JPasswordField(currentPassword);
+        panel.add(new JLabel("Confirm Password"));
+        JPasswordField confirmpasswordField = new JPasswordField(currentPassword);
         panel.add(confirmpasswordField);
 
-        panel.add(new javax.swing.JLabel("Role"));
-        javax.swing.JComboBox<String> roleComboBox = new javax.swing.JComboBox<>(new String[]{"Admin", "User"});
+        panel.add(new JLabel("Role"));
+        JComboBox<String> roleComboBox = new JComboBox<>(new String[]{"Admin", "User"});
         roleComboBox.setSelectedItem(currentRole);
         panel.add(roleComboBox);
 
-        // Custom button options
-        Object[] options = {"Save", "Cancel"};
+        // Create custom button panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(new Color(248, 192, 176)); // Same background for button panel
+
+        // Create "Save" button
+        JButton saveButton = new JButton("Save Changes");
+        saveButton.setBackground(new Color(225, 172, 48)); // Green background for Save button
+        saveButton.setForeground(Color.WHITE);
+        saveButton.setFocusPainted(false);
+        saveButton.setPreferredSize(new Dimension(100, 40)); // Customize button size
+
+        // Create "Cancel" button
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setBackground(new Color(110, 116, 195)); // Red background for Cancel button
+        cancelButton.setForeground(Color.WHITE);
+        cancelButton.setFocusPainted(false);
+        cancelButton.setPreferredSize(new Dimension(100, 40));
+
+        // Add buttons to the button panel
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
 
         // Wrap JOptionPane in a JDialog
-        javax.swing.JOptionPane optionPane = new javax.swing.JOptionPane(
-                panel,
-                javax.swing.JOptionPane.PLAIN_MESSAGE,
-                javax.swing.JOptionPane.OK_CANCEL_OPTION,
-                null,
-                options,
-                options[0]
-        );
-        javax.swing.JDialog dialog = optionPane.createDialog(this, "Edit Account");
-        dialog.setVisible(true);
+        JDialog dialog = new JDialog(this, "Edit Account", true);
+        dialog.setLayout(new BorderLayout());
+        dialog.add(panel, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+        dialog.setSize(400, 250);
+        dialog.setLocationRelativeTo(this); // Center the dialog
+        dialog.setResizable(false);
 
-        // Handle user input
-        Object selectedValue = optionPane.getValue();
-        if (selectedValue != null && selectedValue.equals("Save")) { // "Save" button clicked
-            String username = usernameField.getText();
-            String password = new String(passwordField.getPassword());
-            String confirmPassword = new String(confirmpasswordField.getPassword());
-            String role = (String) roleComboBox.getSelectedItem();
+        // Action listener for the "Save" button
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText();
+                String password = new String(passwordField.getPassword());
+                String confirmPassword = new String(confirmpasswordField.getPassword());
+                String role = (String) roleComboBox.getSelectedItem();
 
-            // Validate input
-            if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (!password.equals(confirmPassword)) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Passwords do not match.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Update the user's data in the database
-            try {
-                boolean success = UserMYSQLConnection.getInstance().updateAccount(
-                        (int) jTable1.getValueAt(selectedRow, 0), // User ID
-                        username,
-                        password,
-                        role
-                );
-
-                if (success) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Account updated successfully!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                    LoadData(); // Refresh the table
-                } else {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Failed to update account.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                // Validate input
+                if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                javax.swing.JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+
+                if (!password.equals(confirmPassword)) {
+                    JOptionPane.showMessageDialog(dialog, "Passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Update the user's data in the database
+                try {
+                    boolean success = UserMYSQLConnection.getInstance().updateAccount(
+                            (int) jTable1.getValueAt(selectedRow, 0), // User ID
+                            username,
+                            password,
+                            role
+                    );
+
+                    if (success) {
+                        JOptionPane.showMessageDialog(dialog, "Account updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        LoadData(); // Refresh the table
+                    } else {
+                        JOptionPane.showMessageDialog(dialog, "Failed to update account.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(dialog, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+                dialog.dispose(); // Close the dialog after the action
             }
-        } else {
-            System.out.println("User canceled the input.");
-            dialog.dispose(); // Dispose of the dialog
-        }
+        });
+
+        // Action listener for the "Cancel" button
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose(); // Close the dialog without saving
+            }
+        });
+
+        dialog.setVisible(true); // Show the dialog
     }
 
     void DeleteAccount(){
