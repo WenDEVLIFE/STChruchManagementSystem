@@ -4,6 +4,7 @@
  */
 package UI;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,6 @@ import javax.swing.table.DefaultTableModel;
 
 import chruchmanagementsystem.PrintConfirmationPanel;
 import database.BookMYSQL;
-import java.awt.Color;
 import model.ReservationModel;
 
 /**
@@ -59,6 +59,9 @@ public class ViewMyBooking extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jButton1.setBackground(new java.awt.Color(204, 0, 51));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Delete Booking");
         jButton1.setActionCommand("");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -83,6 +86,9 @@ public class ViewMyBooking extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jButton2.setBackground(new java.awt.Color(102, 255, 0));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Print");
         jButton2.setActionCommand("");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -91,6 +97,9 @@ public class ViewMyBooking extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setBackground(new java.awt.Color(204, 102, 0));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("View Reject Reason");
         jButton3.setActionCommand("");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -99,6 +108,9 @@ public class ViewMyBooking extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(51, 153, 0));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Back to Main Menu");
         jButton4.setActionCommand("");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -172,12 +184,14 @@ public class ViewMyBooking extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int selectedRow = jTable1.getSelectedRow();
 
+        showRejectDialog("reservationID", "reason");
         if (selectedRow != -1) {
             String status = (String) jTable1.getValueAt(selectedRow, 4);
             String reservationID = (String) jTable1.getValueAt(selectedRow, 0);
             if (status.equals("Rejected")) {
                 String reason = (String) jTable1.getValueAt(selectedRow, 5);
-                javax.swing.JOptionPane.showMessageDialog(this, "Your reservation " + reservationID + " was rejected\n" + "\n Reason from Admin \n" + reason + "\n For more assistance, you may call the chruch office\n Contact: 0912-345-6789", "Reject Reason", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+                showRejectDialog(reservationID, reason);
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "This booking is not rejected.", "Info", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
@@ -241,7 +255,65 @@ public class ViewMyBooking extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Please select a reservation to print.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }                                                                                
+    }
+
+    private void showRejectDialog(String reservationID, String reason) {
+        // Create dialog
+        JDialog dialog = new JDialog(this, "Reject Reason", true);
+        dialog.setSize(400, 250);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new BorderLayout());
+
+        // Set background panel
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(231, 128, 128)); // light red-pinkish background
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        // Add content
+        JLabel label1 = new JLabel("❌Your reservation " + reservationID + " was rejected");
+        JLabel label2 = new JLabel("Reason from Admin:");
+        JTextArea reasonArea = new JTextArea(reason);
+        reasonArea.setLineWrap(true);
+        reasonArea.setWrapStyleWord(true);
+        reasonArea.setEditable(false);
+        reasonArea.setBackground(new Color(255, 255, 255)); // white background
+        reasonArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        JLabel label3 = new JLabel("For more assistance, call: 0912-345-6789");
+
+        // Style text
+        label1.setAlignmentX(Component.LEFT_ALIGNMENT);
+        label2.setAlignmentX(Component.LEFT_ALIGNMENT);
+        reasonArea.setAlignmentX(Component.LEFT_ALIGNMENT);
+        label3.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        panel.add(label1);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(label2);
+        panel.add(reasonArea);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(label3);
+
+        // OK button
+        JButton okButton = new JButton("Back");
+        okButton.setBackground(new Color(246, 55, 58));
+        okButton.setForeground(Color.WHITE);
+        okButton.setFocusPainted(false);
+        okButton.setPreferredSize(new Dimension(80, 30));
+        okButton.addActionListener(e -> dialog.dispose());
+
+        // Button panel
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(231, 128, 128)); // match main background
+        buttonPanel.add(okButton);
+
+        dialog.add(panel, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.setVisible(true);
+    }
+
 
     void loadBookings() {
         // This method should load the bookings from the database and populate the table
