@@ -570,24 +570,133 @@ public class BookMYSQL {
 
     public static List<Map<String, Object>> getReservationsByDate(String date) {
         List<Map<String, Object>> reservations = new ArrayList<>();
+        String query = "SELECT reservation_id, event, time, status, date, date_filled FROM reservationtable WHERE date = ?";
+
         try (Connection conn = DriverManager.getConnection(
                 MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM reservationtable WHERE date = ?")) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
             stmt.setString(1, date);
             ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
                 Map<String, Object> reservation = new HashMap<>();
-                reservation.put("reservationID", rs.getString("reservationID"));
-                reservation.put("event", rs.getString("event"));
-                reservation.put("name", rs.getString("name"));
+                String reservationId = rs.getString("reservation_id");
+                String event = rs.getString("event");
+                String dateStart = rs.getString("date");
+                String dateFilled = rs.getString("date_filled");
+                String name = "";
+
+                // Fetch additional info based on the event type
+                if ("Christening".equals(event)) {
+                    String christeningQuery = "SELECT child_name FROM christening_table WHERE reservation_id = ?";
+                    try (PreparedStatement christeningStmt = conn.prepareStatement(christeningQuery)) {
+                        christeningStmt.setString(1, reservationId);
+                        ResultSet christeningResult = christeningStmt.executeQuery();
+                        if (christeningResult.next()) {
+                            name = christeningResult.getString("child_name");
+                        }
+                    }
+                } else if ("Funeral".equals(event)) {
+                    String funeralQuery = "SELECT deceased_name FROM funeral_table WHERE reservation_id = ?";
+                    try (PreparedStatement funeralStmt = conn.prepareStatement(funeralQuery)) {
+                        funeralStmt.setString(1, reservationId);
+                        ResultSet funeralResult = funeralStmt.executeQuery();
+                        if (funeralResult.next()) {
+                            name = funeralResult.getString("deceased_name");
+                        }
+                    }
+                } else if ("Wedding".equals(event)) {
+                    String weddingQuery = "SELECT groom_name FROM wedding_table WHERE reservation_id = ?";
+                    try (PreparedStatement weddingStmt = conn.prepareStatement(weddingQuery)) {
+                        weddingStmt.setString(1, reservationId);
+                        ResultSet weddingResult = weddingStmt.executeQuery();
+                        if (weddingResult.next()) {
+                            name = weddingResult.getString("groom_name");
+                        }
+                    }
+                }
+
+                // Add reservation details to the list
+                reservation.put("reservationID", reservationId);
+                reservation.put("event", event);
                 reservation.put("time", rs.getString("time"));
                 reservation.put("status", rs.getString("status"));
+                reservation.put("name", name);
+                reservation.put("dates", dateStart);
+                reservation.put("date_filled", dateFilled);
                 reservations.add(reservation);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return reservations;
+    }
+
+    public static List<Map<String, Object>> getReservationsByDateRange(String startDate, String endDate) {
+        List<Map<String, Object>> reservations = new ArrayList<>();
+        String query = "SELECT reservation_id, event, date, time, status, date_filled FROM reservationtable WHERE date BETWEEN ? AND ?";
+
+        try (Connection conn = DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, startDate);
+            stmt.setString(2, endDate);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> reservation = new HashMap<>();
+                String reservationId = rs.getString("reservation_id");
+                String event = rs.getString("event");
+                String dateStart = rs.getString("date");
+                String dateFilled = rs.getString("date_filled");
+                String name = fetchEventName(conn, reservationId, event);
+
+                // Add reservation details to the list
+                reservation.put("reservationID", reservationId);
+                reservation.put("event", event);
+                reservation.put("time", rs.getString("time"));
+                reservation.put("status", rs.getString("status"));
+                reservation.put("name", name);
+                reservation.put("dates", dateStart);
+                reservation.put("date_filled", dateFilled);
+                reservations.add(reservation);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching reservations by date range: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return reservations;
+    }
+
+    // Helper method to fetch additional info based on event type
+    private static String fetchEventName(Connection conn, String reservationId, String event) {
+        String query = null;
+        switch (event) {
+            case "Christening":
+                query = "SELECT child_name FROM christening_table WHERE reservation_id = ?";
+                break;
+            case "Funeral":
+                query = "SELECT deceased_name FROM funeral_table WHERE reservation_id = ?";
+                break;
+            case "Wedding":
+                query = "SELECT groom_name FROM wedding_table WHERE reservation_id = ?";
+                break;
+            default:
+                return ""; // Return empty if event type is unknown
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, reservationId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString(1); // Fetch the first column (name)
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching name for event type " + event + ": " + e.getMessage());
+        }
+        return ""; // Return empty if no result is found
     }
 
     public void notifyUpcomingEvents() {

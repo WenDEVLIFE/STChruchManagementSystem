@@ -146,16 +146,17 @@ public class PrintReport extends javax.swing.JFrame {
 
     // This is for the custom date
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        String date = JOptionPane.showInputDialog(this, "Enter the date (YYYY-MM-DD):", "Custom Date Report", JOptionPane.QUESTION_MESSAGE);
+        // Prompt for the start and end dates
+        String startDate = JOptionPane.showInputDialog(this, "Enter the start date (YYYY-MM-DD):", "Custom Date Range Report", JOptionPane.QUESTION_MESSAGE);
+        String endDate = JOptionPane.showInputDialog(this, "Enter the end date (YYYY-MM-DD):", "Custom Date Range Report", JOptionPane.QUESTION_MESSAGE);
 
-        if (date != null && !date.trim().isEmpty()) {
+        if (startDate != null && !startDate.trim().isEmpty() && endDate != null && !endDate.trim().isEmpty()) {
             try {
-                // Fetch reservations for the given date
-                List<Map<String, Object>> reservations = BookMYSQL.getReservationsByDate(date);
+                // Fetch reservations for the given date range
+                List<Map<String, Object>> reservations = BookMYSQL.getReservationsByDateRange(startDate, endDate);
 
                 if (reservations.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "No reservations found for the given date.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "No reservations found for the given date range.", "Info", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
 
@@ -170,50 +171,47 @@ public class PrintReport extends javax.swing.JFrame {
                         fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
                     }
 
-                    generatePDFReport(reservations, date, fileToSave);
+                    generatePDFReport(reservations, "Report from " + startDate + " to " + endDate, fileToSave);
                     JOptionPane.showMessageDialog(this, "Report saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Error generating report: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Date input is required.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Both start and end dates are required.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // This is for the daily reports
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String date = JOptionPane.showInputDialog(this, "Enter the date (YYYY-MM-DD):", "Daily Report", JOptionPane.QUESTION_MESSAGE);
+        // Get today's date in yyyy-MM-dd format
+        String date = java.time.LocalDate.now().toString();
 
-        if (date != null && !date.trim().isEmpty()) {
-            try {
-                // Fetch reservations for the given date
-                List<Map<String, Object>> reservations = BookMYSQL.getReservationsByDate(date);
+        try {
+            // Fetch reservations for today's date
+            List<Map<String, Object>> reservations = BookMYSQL.getReservationsByDate(date);
 
-                if (reservations.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "No reservations found for the given date.", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-
-                // Generate the PDF report
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Save Daily Report as PDF");
-                int userSelection = fileChooser.showSaveDialog(this);
-
-                if (userSelection == JFileChooser.APPROVE_OPTION) {
-                    File fileToSave = fileChooser.getSelectedFile();
-                    if (!fileToSave.getName().endsWith(".pdf")) {
-                        fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
-                    }
-
-                    generatePDFReport(reservations, "Daily Report for " + date, fileToSave);
-                    JOptionPane.showMessageDialog(this, "Daily report saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error generating daily report: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            if (reservations.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No reservations found for today.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                return;
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Date input is required.", "Error", JOptionPane.ERROR_MESSAGE);
+
+            // Generate the PDF report
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Save Daily Report as PDF");
+            int userSelection = fileChooser.showSaveDialog(this);
+
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = fileChooser.getSelectedFile();
+                if (!fileToSave.getName().endsWith(".pdf")) {
+                    fileToSave = new File(fileToSave.getAbsolutePath() + ".pdf");
+                }
+
+                generatePDFReport(reservations, "Daily Report for " + date, fileToSave);
+                JOptionPane.showMessageDialog(this, "Daily report saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error generating daily report: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -258,19 +256,36 @@ public class PrintReport extends javax.swing.JFrame {
         com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(file));
         document.open();
 
-        // Add title
+
         document.add(new com.itextpdf.text.Paragraph(date, com.itextpdf.text.FontFactory.getFont(com.itextpdf.text.FontFactory.HELVETICA_BOLD, 16)));
         document.add(new com.itextpdf.text.Paragraph("--------------------------------------------------"));
 
-        // Add reservation details
+        com.itextpdf.text.pdf.PdfPTable table = new com.itextpdf.text.pdf.PdfPTable(7);
+        table.setWidthPercentage(100);
+        table.setSpacingBefore(10f);
+        table.setSpacingAfter(10f);
+
+
+        table.addCell("Reservation ID");
+        table.addCell("Event");
+        table.addCell("Name");
+        table.addCell("Time");
+        table.addCell("Status");
+        table.addCell("Date");
+        table.addCell("Date Filled");
+
         for (Map<String, Object> reservation : reservations) {
-            document.add(new com.itextpdf.text.Paragraph("Reservation ID: " + reservation.get("reservationID")));
-            document.add(new com.itextpdf.text.Paragraph("Event: " + reservation.get("event")));
-            document.add(new com.itextpdf.text.Paragraph("Name: " + reservation.get("name")));
-            document.add(new com.itextpdf.text.Paragraph("Time: " + reservation.get("time")));
-            document.add(new com.itextpdf.text.Paragraph("Status: " + reservation.get("status")));
-            document.add(new com.itextpdf.text.Paragraph("--------------------------------------------------"));
+            table.addCell(String.valueOf(reservation.get("reservationID")));
+            table.addCell(String.valueOf(reservation.get("event")));
+            table.addCell(String.valueOf(reservation.get("name")));
+            table.addCell(String.valueOf(reservation.get("time")));
+            table.addCell(String.valueOf(reservation.get("status")));
+            table.addCell(String.valueOf(reservation.get("dates")));
+            table.addCell(String.valueOf(reservation.get("date_filled")));
         }
+
+// Add the table to the document
+        document.add(table);
 
         document.close();
     }
