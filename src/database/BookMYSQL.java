@@ -608,9 +608,115 @@ public class BookMYSQL {
                 String date = resultSet.getString("date");
                 int userId = resultSet.getInt("user_id");
 
+                String additionalInfo = "";
+
+                // If the event is "Christening," fetch the child's name
+                if ("Christening".equals(event)) {
+                    String christeningQuery = "SELECT child_name FROM christening_table WHERE reservation_id = ?";
+                    try (PreparedStatement christeningStatement = connection.prepareStatement(christeningQuery)) {
+                        christeningStatement.setString(1, reservationId);
+                        ResultSet christeningResult = christeningStatement.executeQuery();
+                        if (christeningResult.next()) {
+                            additionalInfo = " for " + christeningResult.getString("child_name");
+                        }
+                    }
+                }
+
+                if ("Funeral".equals(event)) {
+                    String funeralQuery = "SELECT deceased_name FROM funeral_table WHERE reservation_id = ?";
+                    try (PreparedStatement funeralStatement = connection.prepareStatement(funeralQuery)) {
+                        funeralStatement.setString(1, reservationId);
+                        ResultSet funeralResult = funeralStatement.executeQuery();
+                        if (funeralResult.next()) {
+                            additionalInfo = " for " + funeralResult.getString("deceased_name");
+                        }
+                    }
+                }
+
+                if ("Wedding".equals(event)) {
+                    String weddingQuery = "SELECT groom_name FROM wedding_table WHERE reservation_id = ?";
+                    try (PreparedStatement weddingStatement = connection.prepareStatement(weddingQuery)) {
+                        weddingStatement.setString(1, reservationId);
+                        ResultSet weddingResult = weddingStatement.executeQuery();
+                        if (weddingResult.next()) {
+                            additionalInfo = " for " + weddingResult.getString("groom_name");
+                        }
+                    }
+                }
+
                 // Notify the user
                 JOptionPane.showMessageDialog(null,
-                        "Reminder: Your " + event + " reservation (ID: " + reservationId + ") is scheduled for " + date + ".",
+                        "Reminder: The " + event + " reservation (ID: " + reservationId + ")" + additionalInfo + " is scheduled for " + date + ".",
+                        "Upcoming Event Notification",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                System.out.println("Notification sent to user ID: " + userId + " for reservation ID: " + reservationId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "An error occurred while fetching upcoming events: " + e.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void notifyUser(int userId) {
+        String query = "SELECT reservation_id, event, date, user_id FROM reservationtable WHERE date = ? AND user_id = ? AND status = 'Accepted'";
+        LocalDate nextDay = LocalDate.now().plusDays(1);
+        String nextDayString = nextDay.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        try (Connection connection = DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, nextDayString);
+            statement.setInt(2, userId);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String reservationId = resultSet.getString("reservation_id");
+                String event = resultSet.getString("event");
+                String date = resultSet.getString("date");
+                String additionalInfo = "";
+
+                // If the event is "Christening," fetch the child's name
+                if ("Christening".equals(event)) {
+                    String christeningQuery = "SELECT child_name FROM christening_table WHERE reservation_id = ?";
+                    try (PreparedStatement christeningStatement = connection.prepareStatement(christeningQuery)) {
+                        christeningStatement.setString(1, reservationId);
+                        ResultSet christeningResult = christeningStatement.executeQuery();
+                        if (christeningResult.next()) {
+                            additionalInfo = " for " + christeningResult.getString("child_name");
+                        }
+                    }
+                }
+
+                if ("Funeral".equals(event)) {
+                    String funeralQuery = "SELECT deceased_name FROM funeral_table WHERE reservation_id = ?";
+                    try (PreparedStatement funeralStatement = connection.prepareStatement(funeralQuery)) {
+                        funeralStatement.setString(1, reservationId);
+                        ResultSet funeralResult = funeralStatement.executeQuery();
+                        if (funeralResult.next()) {
+                            additionalInfo = " for " + funeralResult.getString("deceased_name");
+                        }
+                    }
+                }
+
+                if ("Wedding".equals(event)) {
+                    String weddingQuery = "SELECT groom_name FROM wedding_table WHERE reservation_id = ?";
+                    try (PreparedStatement weddingStatement = connection.prepareStatement(weddingQuery)) {
+                        weddingStatement.setString(1, reservationId);
+                        ResultSet weddingResult = weddingStatement.executeQuery();
+                        if (weddingResult.next()) {
+                            additionalInfo = " for " + weddingResult.getString("groom_name");
+                        }
+                    }
+                }
+
+                // Notify the user
+                JOptionPane.showMessageDialog(null,
+                        "Reminder: The of Your" + event + " reservation (ID: " + reservationId + ")" + additionalInfo + " is scheduled for " + date + ".",
                         "Upcoming Event Notification",
                         JOptionPane.INFORMATION_MESSAGE);
 

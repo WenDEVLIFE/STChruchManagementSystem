@@ -5,6 +5,8 @@
 package UI;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import database.BookMYSQL;
+
 import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +27,7 @@ public class UserMainMenu extends javax.swing.JFrame {
         initComponents();
         UserMainMenu.userId = userId;
           getContentPane().setBackground(new Color(210, 180, 140));
+        BookMYSQL.getInstance().notifyUser(userId);
     }
     
    
