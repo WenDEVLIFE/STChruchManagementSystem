@@ -218,7 +218,6 @@ public class ManagePendingBooking extends javax.swing.JFrame {
     // This is for the approved
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         int selectedRow = jTable1.getSelectedRow();
-
         if (selectedRow != -1) {
             String reservationID = (String) bookingModel.getValueAt(selectedRow, 0);
             String event = (String) bookingModel.getValueAt(selectedRow, 1);
@@ -232,7 +231,6 @@ public class ManagePendingBooking extends javax.swing.JFrame {
             JFrame frame = new JFrame("Message");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(600, 400);
-            frame.setVisible(true);
             showCustomDialog(frame, reservationID);
             loadBookings();
         } else {
