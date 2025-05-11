@@ -271,7 +271,7 @@ public class PrintReport extends javax.swing.JFrame {
         table.addCell("Name");
         table.addCell("Time");
         table.addCell("Status");
-        table.addCell("Date");
+        table.addCell("Date of the event");
         table.addCell("Date Filled");
 
         for (Map<String, Object> reservation : reservations) {
