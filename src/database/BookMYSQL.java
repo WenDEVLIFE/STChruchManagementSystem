@@ -247,36 +247,6 @@ public class BookMYSQL {
         return null;
     }
 
-    public static List<Map<String, Object>> getReservationsByWeek(String startDate) {
-         String query = "SELECT * FROM reservationtable WHERE date >= ? AND date < DATE_ADD(?, INTERVAL 7 DAY)";
-
-        List<Map<String, Object>> reservations = new ArrayList<>();
-
-         try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
-                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
-             java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, startDate);
-            statement.setString(2, startDate);
-            java.sql.ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                Map<String, Object> reservation = new HashMap<>();
-                reservation.put("reservationID", resultSet.getString("reservation_id"));
-                reservation.put("event", resultSet.getString("event"));
-                reservation.put("time", resultSet.getString("time"));
-                reservation.put("status", resultSet.getString("status"));
-                reservations.add(reservation);
-            }
-
-
-        } catch (java.sql.SQLException e) {
-            e.printStackTrace();
-            System.err.println("Error fetching reservations: " + e.getMessage());
-         }
-
-        return reservations;
-    }
-
     public void insertChristening(Map<String, Object> christening, JDialog dialog) {
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM christening_table";
         String countChristeningsSQL = "SELECT COUNT(*) AS count FROM reservationtable WHERE date_filled = ? AND event = 'Christening'";
@@ -570,7 +540,7 @@ public class BookMYSQL {
 
     public static List<Map<String, Object>> getReservationsByDate(String date) {
         List<Map<String, Object>> reservations = new ArrayList<>();
-        String query = "SELECT reservation_id, event, time, status, date, date_filled FROM reservationtable WHERE date = ?";
+        String query = "SELECT reservation_id, event, time, status, date, date_filled FROM reservationtable WHERE date = ? AND status = 'Accepted'";
 
         try (Connection conn = DriverManager.getConnection(
                 MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
@@ -617,6 +587,11 @@ public class BookMYSQL {
                     }
                 }
 
+                System.out.println("Reservation ID: " + reservationId);
+                System.out.println("Event: " + event);
+                System.out.println("Date: " + dateStart);
+                System.out.println("Date Filled: " + dateFilled);
+
                 // Add reservation details to the list
                 reservation.put("reservationID", reservationId);
                 reservation.put("event", event);
@@ -626,6 +601,8 @@ public class BookMYSQL {
                 reservation.put("dates", dateStart);
                 reservation.put("date_filled", dateFilled);
                 reservations.add(reservation);
+
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -635,7 +612,7 @@ public class BookMYSQL {
 
     public static List<Map<String, Object>> getReservationsByDateRange(String startDate, String endDate) {
         List<Map<String, Object>> reservations = new ArrayList<>();
-        String query = "SELECT reservation_id, event, date, time, status, date_filled FROM reservationtable WHERE date BETWEEN ? AND ?";
+        String query = "SELECT reservation_id, event, date, time, status, date_filled FROM reservationtable WHERE date BETWEEN ? AND ? AND status = 'Accepted'";
 
         try (Connection conn = DriverManager.getConnection(
                 MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
@@ -646,6 +623,11 @@ public class BookMYSQL {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
+                String status = rs.getString("status").trim(); // Ensure no extra spaces
+                if (!"Accepted".equalsIgnoreCase(status)) {
+                    continue; // Skip non-Accepted statuses
+                }
+
                 Map<String, Object> reservation = new HashMap<>();
                 String reservationId = rs.getString("reservation_id");
                 String event = rs.getString("event");
@@ -657,7 +639,7 @@ public class BookMYSQL {
                 reservation.put("reservationID", reservationId);
                 reservation.put("event", event);
                 reservation.put("time", rs.getString("time"));
-                reservation.put("status", rs.getString("status"));
+                reservation.put("status", status);
                 reservation.put("name", name);
                 reservation.put("dates", dateStart);
                 reservation.put("date_filled", dateFilled);
@@ -670,7 +652,44 @@ public class BookMYSQL {
         return reservations;
     }
 
-    // Helper method to fetch additional info based on event type
+    public static List<Map<String, Object>> getReservationsByWeek(String startDate) {
+        String query = "SELECT reservation_id, event, time, status, date FROM reservationtable " +
+                "WHERE date >= ? AND date < DATE_ADD(?, INTERVAL 7 DAY) AND status = 'Accepted'";
+
+        List<Map<String, Object>> reservations = new ArrayList<>();
+
+        try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
+                MYSQLConnection.databaseUrl, MYSQLConnection.user, MYSQLConnection.password);
+             java.sql.PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, startDate);
+            statement.setString(2, startDate);
+            java.sql.ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Map<String, Object> reservation = new HashMap<>();
+                String reservationId = resultSet.getString("reservation_id");
+                String event = resultSet.getString("event");
+                String dateFilled = resultSet.getString("date_filled");
+                String name = fetchEventName(connection, reservationId, event);
+                reservation.put("reservationID", reservationId);
+                reservation.put("event", event);
+                reservation.put("time", resultSet.getString("time"));
+                reservation.put("status", resultSet.getString("status"));
+                reservation.put("name", name);
+                reservation.put("dates", resultSet.getString("date"));
+                reservation.put("date_filled", dateFilled);
+                reservations.add(reservation);
+            }
+
+        } catch (java.sql.SQLException e) {
+            System.err.println("Error fetching reservations by week: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return reservations;
+    }
+
     private static String fetchEventName(Connection conn, String reservationId, String event) {
         String query = null;
         switch (event) {
