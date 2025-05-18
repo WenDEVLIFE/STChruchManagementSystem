@@ -27,7 +27,6 @@ public class BookMYSQL {
         return instance;
     }
 
-    // get the reservation by user id
     public static List<ReservationModel> getAllReservations(int userId) {
         String query = "SELECT * FROM reservationtable WHERE user_id = ?";
         List<ReservationModel> reservations = new java.util.ArrayList<>();
@@ -53,7 +52,6 @@ public class BookMYSQL {
         }
     }
 
-    // get all reservations
     public static List<ReservationModel> getAllReservations1() {
         String query = "SELECT * FROM reservationtable";
         List<ReservationModel> reservations = new java.util.ArrayList<>();
@@ -79,7 +77,6 @@ public class BookMYSQL {
         return reservations;
     }
 
-    // get the pending status
     public static List<ReservationModel> getReservationPending() {
         String query = "SELECT * FROM reservationtable WHERE status = 'Pending'";
         List<ReservationModel> reservations = new java.util.ArrayList<>();
@@ -146,11 +143,9 @@ public class BookMYSQL {
              java.sql.PreparedStatement statement1 = connection.prepareStatement(query1);
              java.sql.PreparedStatement statement2 = connection.prepareStatement(query2)) {
 
-            // Execute the first query
             statement1.setString(1, reservationID);
             statement1.executeUpdate();
 
-            // Execute the second query
             statement2.setString(1, reservationID);
             statement2.executeUpdate();
 
@@ -161,7 +156,6 @@ public class BookMYSQL {
         }
     }
 
-    // This will update the reservation status
     public static void updateReservationStatus(String reservationID, String status) {
         String query = "UPDATE reservationtable SET status = ? WHERE reservation_id = ?";
         try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
@@ -179,7 +173,6 @@ public class BookMYSQL {
         }
     }
 
-    // This will update the reservation status to rejected
     public static void rejected(String reservationID, String reason, String status, JDialog dialog) {
         String query = "UPDATE reservationtable SET status = ?, reason = ? WHERE reservation_id = ?";
         try (java.sql.Connection connection = java.sql.DriverManager.getConnection(
@@ -275,10 +268,8 @@ public class BookMYSQL {
                 return;
             }
 
-            // Get today's date for date_filled
             String currentDate = LocalDate.now().format(formatter);
 
-            // Check if the limit of 3 christenings per day is reached based on date_filled and event
             countStatement.setString(1, currentDate);
             try (java.sql.ResultSet resultSet = countStatement.executeQuery()) {
                 if (resultSet.next() && resultSet.getInt("count") >= 3) {
@@ -287,17 +278,17 @@ public class BookMYSQL {
                 }
             }
 
-            // Generate the custom ID
-            String newId = "CHR000001"; // Default ID if no records exist
+
+            String newId = "CHR000001";
             try (java.sql.ResultSet resultSet = statement.executeQuery(generateIdSQL)) {
                 if (resultSet.next() && resultSet.getString("reservation_id") != null) {
                     String maxId = resultSet.getString("reservation_id");
-                    int numericPart = Integer.parseInt(maxId.substring(3)); // Extract numeric part
-                    newId = String.format("CHR%06d", numericPart + 1); // Increment and format
+                    int numericPart = Integer.parseInt(maxId.substring(3));
+                    newId = String.format("CHR%06d", numericPart + 1);
                 }
             }
 
-            // Insert into christening_table
+
             christeningStatement.setString(1, newId);
             christeningStatement.setString(2, (String) christening.get("childName"));
             christeningStatement.setString(3, (String) christening.get("parentName"));
@@ -310,7 +301,7 @@ public class BookMYSQL {
             if (rowsInserted > 0) {
                 System.out.println("Christening record inserted successfully with ID: " + newId);
 
-                // Insert into reservationtable
+
                 reservationStatement.setString(1, newId);
                 reservationStatement.setString(2, "Christening");
                 reservationStatement.setString(3, dateString);
@@ -336,7 +327,7 @@ public class BookMYSQL {
                     "Database Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    // insert funeral
+
     public  void insertFuneral(Map<String, Object> funeral, JDialog dialog) {
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM funeral_table";
         String insertSQL = "INSERT INTO funeral_table (reservation_id, deceased_name, family_rep_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -348,7 +339,7 @@ public class BookMYSQL {
              java.sql.PreparedStatement christeningStatement = connection.prepareStatement(insertSQL);
              java.sql.PreparedStatement reservationStatement = connection.prepareStatement(insertReservationSQL)) {
 
-            // Validate the date
+
             String dateString = (String) funeral.get("date");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(dateString, formatter);
@@ -363,8 +354,8 @@ public class BookMYSQL {
                 return;
             }
 
-            // Generate the custom ID
-            String newId = "FUN000001"; // Default ID if no records exist
+
+            String newId = "FUN000001";
             try (java.sql.ResultSet resultSet = statement.executeQuery(generateIdSQL)) {
                 if (resultSet.next() && resultSet.getString("reservation_id") != null) {
                     String maxId = resultSet.getString("reservation_id");
@@ -373,7 +364,7 @@ public class BookMYSQL {
                 }
             }
 
-            // Insert into christening_table
+
             christeningStatement.setString(1, newId);
             christeningStatement.setString(2, (String) funeral.get("deceased_name"));
             christeningStatement.setString(3, (String) funeral.get("family_rep_name"));
@@ -382,14 +373,14 @@ public class BookMYSQL {
             christeningStatement.setString(6, (String) funeral.get("timeSlot"));
             christeningStatement.setInt(7, (int) funeral.get("user_id"));
 
-            // Get today's date for date_filled
+
             String currentDate = LocalDate.now().format(formatter);
 
             int rowsInserted = christeningStatement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("Christening record inserted successfully with ID: " + newId);
 
-                // Insert into reservationtable
+
                 reservationStatement.setString(1, newId);
                 reservationStatement.setString(2, "Funeral");
                 reservationStatement.setString(3, dateString);
@@ -414,9 +405,9 @@ public class BookMYSQL {
 
     }
 
-    // insert wedding
+
     public void insertWedding(Map<String, Object> wedding, JDialog dialog) {
-        // Implementation for inserting wedding data into MySQL database
+
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM wedding_table";
         String insertSQL = "INSERT INTO wedding_table (reservation_id, groom_name, bride_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason, user_id, date_filled) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -443,8 +434,8 @@ public class BookMYSQL {
             }
 
 
-            // Generate the custom ID
-            String newId = "WED000001"; // Default ID if no records exist
+
+            String newId = "WED000001";
             try (java.sql.ResultSet resultSet = statement.executeQuery(generateIdSQL)) {
                 if (resultSet.next() && resultSet.getString("reservation_id") != null) {
                     String maxId = resultSet.getString("reservation_id");
@@ -453,7 +444,7 @@ public class BookMYSQL {
                 }
             }
 
-            // Insert into christening_table
+
             christeningStatement.setString(1, newId);
             christeningStatement.setString(2, (String) wedding.get("groom_name"));
             christeningStatement.setString(3, (String) wedding.get("brides_name"));
@@ -463,14 +454,13 @@ public class BookMYSQL {
             christeningStatement.setInt(7, (int) wedding.get("user_id"));
 
 
-            // Get today's date for date_filled
+
             String currentDate = LocalDate.now().format(formatter);
 
             int rowsInserted = christeningStatement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("Christening record inserted successfully with ID: " + newId);
 
-                // Insert into reservationtable
                 reservationStatement.setString(1, newId);
                 reservationStatement.setString(2, "Wedding");
                 reservationStatement.setString(3, dateString);
@@ -557,7 +547,6 @@ public class BookMYSQL {
                 String dateFilled = rs.getString("date_filled");
                 String name = "";
 
-                // Fetch additional info based on the event type
                 if ("Christening".equals(event)) {
                     String christeningQuery = "SELECT child_name FROM christening_table WHERE reservation_id = ?";
                     try (PreparedStatement christeningStmt = conn.prepareStatement(christeningQuery)) {
@@ -592,7 +581,6 @@ public class BookMYSQL {
                 System.out.println("Date: " + dateStart);
                 System.out.println("Date Filled: " + dateFilled);
 
-                // Add reservation details to the list
                 reservation.put("reservationID", reservationId);
                 reservation.put("event", event);
                 reservation.put("time", rs.getString("time"));
@@ -625,7 +613,7 @@ public class BookMYSQL {
             while (rs.next()) {
                 String status = rs.getString("status").trim(); // Ensure no extra spaces
                 if (!"Accepted".equalsIgnoreCase(status)) {
-                    continue; // Skip non-Accepted statuses
+                    continue;
                 }
 
                 Map<String, Object> reservation = new HashMap<>();
@@ -703,19 +691,19 @@ public class BookMYSQL {
                 query = "SELECT groom_name FROM wedding_table WHERE reservation_id = ?";
                 break;
             default:
-                return ""; // Return empty if event type is unknown
+                return "";
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, reservationId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getString(1); // Fetch the first column (name)
+                return rs.getString(1);
             }
         } catch (SQLException e) {
             System.err.println("Error fetching name for event type " + event + ": " + e.getMessage());
         }
-        return ""; // Return empty if no result is found
+        return "";
     }
 
     public void notifyUpcomingEvents() {
@@ -738,7 +726,7 @@ public class BookMYSQL {
 
                 String additionalInfo = "";
 
-                // If the event is "Christening," fetch the child's name
+
                 if ("Christening".equals(event)) {
                     String christeningQuery = "SELECT child_name FROM christening_table WHERE reservation_id = ?";
                     try (PreparedStatement christeningStatement = connection.prepareStatement(christeningQuery)) {
@@ -772,7 +760,7 @@ public class BookMYSQL {
                     }
                 }
 
-                // Notify the user
+
                 JOptionPane.showMessageDialog(null,
                         "Reminder: The " + event + " reservation (ID: " + reservationId + ")" + additionalInfo + " is scheduled for " + date + ".",
                         "Upcoming Event Notification",
@@ -808,7 +796,6 @@ public class BookMYSQL {
                 String date = resultSet.getString("date");
                 String additionalInfo = "";
 
-                // If the event is "Christening," fetch the child's name
                 if ("Christening".equals(event)) {
                     String christeningQuery = "SELECT child_name FROM christening_table WHERE reservation_id = ?";
                     try (PreparedStatement christeningStatement = connection.prepareStatement(christeningQuery)) {
@@ -842,7 +829,6 @@ public class BookMYSQL {
                     }
                 }
 
-                // Notify the user
                 JOptionPane.showMessageDialog(null,
                         "Reminder: The of Your" + event + " reservation (ID: " + reservationId + ")" + additionalInfo + " is scheduled for " + date + ".",
                         "Upcoming Event Notification",

@@ -152,7 +152,6 @@ public class PrintReport extends javax.swing.JFrame {
 
         if (startDate != null && !startDate.trim().isEmpty() && endDate != null && !endDate.trim().isEmpty()) {
             try {
-                // Fetch reservations for the given date range
                 List<Map<String, Object>> reservations = BookMYSQL.getReservationsByDateRange(startDate, endDate);
 
                 if (reservations.isEmpty()) {
@@ -160,7 +159,6 @@ public class PrintReport extends javax.swing.JFrame {
                     return;
                 }
 
-                // Generate the PDF report
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle("Save Report as PDF");
                 int userSelection = fileChooser.showSaveDialog(this);

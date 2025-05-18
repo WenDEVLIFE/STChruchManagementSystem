@@ -256,7 +256,7 @@ public class BookAnEvents extends javax.swing.JFrame {
                 LocalTime endTime = LocalTime.of(16, 0);
 
                 if (enteredTime.isBefore(startTime) || enteredTime.isAfter(endTime)) {
-                    JOptionPane.showMessageDialog(dialog, "Please enter a time between 08:00 AM and 04:00 PM.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(dialog, "Please enter a time between 08:00 AM to 04:00 PM.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -380,7 +380,7 @@ public class BookAnEvents extends javax.swing.JFrame {
                 LocalTime endTime = LocalTime.of(16, 0);
 
                 if (enteredTime.isBefore(startTime) || enteredTime.isAfter(endTime)) {
-                    JOptionPane.showMessageDialog(dialog, "Please enter a time between 08:00 AM and 04:00 PM.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(dialog, "Please enter a time between 08:00 AM to 04:00 PM.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -390,7 +390,7 @@ public class BookAnEvents extends javax.swing.JFrame {
                 weddingDetails.put("contactNumber", contactNumber);
                 weddingDetails.put("date", date);
                 weddingDetails.put("timeSlot", timeSlot);
-                weddingDetails.put("user_id", userId); // Make sure userId is in scope
+                weddingDetails.put("user_id", userId);
 
                 BookMYSQL.getInstance().insertWedding(weddingDetails, dialog);
                 dialog.dispose();
@@ -504,13 +504,13 @@ public class BookAnEvents extends javax.swing.JFrame {
                 LocalTime endTime = LocalTime.of(16, 0);
 
                 if (enteredTime.isBefore(startTime) || enteredTime.isAfter(endTime)) {
-                    JOptionPane.showMessageDialog(dialog, "Please enter a time between 08:00 AM and 04:00 PM.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(dialog, "Please enter a time between 08:00 AM to 04:00 PM.", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 Map<String, Object> funeralDetails = new HashMap<>();
                 funeralDetails.put("deceased_name", deceasedName);
-                funeralDetails.put("family_name", familyName);
+                funeralDetails.put("family_rep_name", familyName);
                 funeralDetails.put("contactNumber", contactNumber);
                 funeralDetails.put("date", date);
                 funeralDetails.put("timeSlot", timeSlot);
