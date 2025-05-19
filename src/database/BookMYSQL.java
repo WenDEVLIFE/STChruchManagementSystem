@@ -330,6 +330,7 @@ public class BookMYSQL {
 
     public  void insertFuneral(Map<String, Object> funeral, JDialog dialog) {
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM funeral_table";
+        String countFuneralsSQL = "SELECT COUNT(*) AS count FROM reservationtable WHERE date_filled = ? AND event = 'Funeral'";
         String insertSQL = "INSERT INTO funeral_table (reservation_id, deceased_name, family_rep_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason, user_id, date_filled) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -364,6 +365,19 @@ public class BookMYSQL {
                 }
             }
 
+            // Check if the maximum number of funerals for today has been reached
+            String currentDate = LocalDate.now().format(formatter);
+            countFuneralsSQL = "SELECT COUNT(*) AS count FROM reservationtable WHERE date_filled = ? AND event = 'Funeral'";
+            try (java.sql.PreparedStatement countStatement = connection.prepareStatement(countFuneralsSQL)) {
+                countStatement.setString(1, currentDate);
+                try (java.sql.ResultSet resultSet = countStatement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt("count") >= 2) {
+                        JOptionPane.showMessageDialog(null, "The maximum number of funerals for today has been reached.", "Limit Reached", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
+
 
             christeningStatement.setString(1, newId);
             christeningStatement.setString(2, (String) funeral.get("deceased_name"));
@@ -373,8 +387,6 @@ public class BookMYSQL {
             christeningStatement.setString(6, (String) funeral.get("timeSlot"));
             christeningStatement.setInt(7, (int) funeral.get("user_id"));
 
-
-            String currentDate = LocalDate.now().format(formatter);
 
             int rowsInserted = christeningStatement.executeUpdate();
             if (rowsInserted > 0) {
@@ -407,8 +419,8 @@ public class BookMYSQL {
 
 
     public void insertWedding(Map<String, Object> wedding, JDialog dialog) {
-
         String generateIdSQL = "SELECT MAX(reservation_id) AS reservation_id FROM wedding_table";
+        String countWeddingsSQL = "SELECT COUNT(*) AS count FROM reservationtable WHERE date_filled = ? AND event = 'Wedding'";
         String insertSQL = "INSERT INTO wedding_table (reservation_id, groom_name, bride_name, contact_number, date, time_slot, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertReservationSQL = "INSERT INTO reservationtable (reservation_id, event, date, time, status, reason, user_id, date_filled) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -453,6 +465,16 @@ public class BookMYSQL {
             christeningStatement.setString(6, (String) wedding.get("timeSlot"));
             christeningStatement.setInt(7, (int) wedding.get("user_id"));
 
+            String countWeddingsSQL1 = "SELECT COUNT(*) AS count FROM reservationtable WHERE date_filled = ? AND event = 'Wedding'";
+            try (java.sql.PreparedStatement countStatement = connection.prepareStatement(countWeddingsSQL1)) {
+                countStatement.setString(1, LocalDate.now().format(formatter));
+                try (java.sql.ResultSet resultSet = countStatement.executeQuery()) {
+                    if (resultSet.next() && resultSet.getInt("count") >= 2) {
+                        JOptionPane.showMessageDialog(null, "The maximum number of weddings for today has been reached.", "Limit Reached", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
 
 
             String currentDate = LocalDate.now().format(formatter);
