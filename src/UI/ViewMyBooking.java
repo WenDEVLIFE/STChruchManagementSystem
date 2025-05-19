@@ -184,10 +184,10 @@ public class ViewMyBooking extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow != -1) {
-            String status = (String) jTable1.getValueAt(selectedRow, 4);
+            String status = (String) jTable1.getValueAt(selectedRow, 3);
             String reservationID = (String) jTable1.getValueAt(selectedRow, 0);
-            if (status.equals("Rejected")) {
-                String reason = (String) jTable1.getValueAt(selectedRow, 5);
+            if (status.toLowerCase().equals("rejected")) {
+                String reason = BookMYSQL.getRejectReason(reservationID);
 
                 showRejectDialog(reservationID, reason);
             } else {
