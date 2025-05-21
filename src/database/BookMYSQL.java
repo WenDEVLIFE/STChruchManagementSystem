@@ -663,7 +663,7 @@ public class BookMYSQL {
     }
 
     public static List<Map<String, Object>> getReservationsByWeek(String startDate) {
-        String query = "SELECT reservation_id, event, time, status, date FROM reservationtable " +
+        String query = "SELECT reservation_id, event, time, status, date, date_filled FROM reservationtable " +
                 "WHERE date >= ? AND date < DATE_ADD(?, INTERVAL 7 DAY) AND status = 'Accepted'";
 
         List<Map<String, Object>> reservations = new ArrayList<>();
